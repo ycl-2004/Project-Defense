@@ -220,11 +220,26 @@
 }
 
 @media print {
+  @page {
+    margin: 14mm 12mm;
+  }
+  /* Paper is always light, whatever theme was on screen. */
+  :root {
+    color-scheme: light !important;
+  }
   body {
     background: #fff;
-    color: #000;
   }
   .no-print {
     display: none !important;
+  }
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+  .shadow-card,
+  .shadow-lift {
+    box-shadow: none !important;
   }
 }

@@ -17,6 +17,7 @@ const zh = {
     lines: "第 {start}–{end} 行",
     line: "第 {start} 行",
     openOnGitHub: "在 GitHub 打开",
+    colon: "：",
   },
   difficulty: {
     easy: { name: "简单", desc: "讲清楚代码做了什么、数据怎么流动" },
@@ -161,6 +162,11 @@ const zh = {
     meta: "{part} · {difficulty} · {count} 题",
     disclaimer:
       "这份报告是理解程度的证据，不是证明，也不用来判定作弊。几道题看不出全部，最可靠的验证是让学生动手改一处代码，再讲一遍为什么这样改。",
+    questionLabel: "题目",
+    codeLabel: "引用代码",
+    layerColumn: "层次",
+    scoreColumn: "分数",
+    answerSkipped: "（跳过）",
     noReport: "还没有报告",
     noReportLead: "完成一场答辩后，报告会出现在这里。",
     start: "去开始",
@@ -200,6 +206,7 @@ const en: Messages = {
     lines: "lines {start}–{end}",
     line: "line {start}",
     openOnGitHub: "Open on GitHub",
+    colon: ": ",
   },
   difficulty: {
     easy: { name: "Easy", desc: "Explain what the code does and how data flows" },
@@ -344,6 +351,11 @@ const en: Messages = {
     meta: "{part} · {difficulty} · {count} questions",
     disclaimer:
       "This report is evidence of understanding, not proof, and it is never a cheating verdict. A few questions can't show everything; the most reliable check is to have the student change one piece of code and explain why.",
+    questionLabel: "Question",
+    codeLabel: "Cited code",
+    layerColumn: "Layer",
+    scoreColumn: "Score",
+    answerSkipped: "(skipped)",
     noReport: "No report yet",
     noReportLead: "Finish a session and the report will appear here.",
     start: "Get started",

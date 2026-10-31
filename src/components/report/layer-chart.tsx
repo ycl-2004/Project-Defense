@@ -28,7 +28,8 @@ export function LayerRadar({ scores, className }: { scores: LayerScore[]; classN
             fillOpacity={0.14}
             dot={{ r: 4, fill: "var(--brand)", stroke: "var(--surface)", strokeWidth: 2 }}
             activeDot={{ r: 6, fill: "var(--brand)", stroke: "var(--surface)", strokeWidth: 2 }}
-            animationDuration={700}
+            // No entrance animation: a resize (or printing) would replay it and capture the first frame.
+            isAnimationActive={false}
           />
           <Tooltip
             cursor={false}

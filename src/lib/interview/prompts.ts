@@ -325,6 +325,7 @@ Rate every question id (${input.plan.map((question) => question.id).join(", ")})
 "studyNext": 2-4 concepts to learn next, each with why and the related files.
 "mentorNextStep": one small, concrete code change the student could make in this Part and then explain — the strongest evidence of understanding — with why it is a good next step.
 "summary": 2-3 sentences.
+In any text, refer to a question by its number ("question 3"; in Chinese "第 3 题"), never by its id.
 ${languageRule(input.locale)}
 
 Reply with json in exactly this shape:
