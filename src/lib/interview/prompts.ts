@@ -48,7 +48,7 @@ const LAYER_GUIDE: Record<Layer, string> = {
 
 function languageRule(locale: Locale): string {
   return locale === "zh"
-    ? "Write every natural-language field in Simplified Chinese. Keep code identifiers, file names and technical terms in English."
+    ? "Write every natural-language field in Simplified Chinese with full-width Chinese punctuation (，。：？！“”). Keep code identifiers, file names and technical terms in English."
     : "Write every natural-language field in English.";
 }
 
