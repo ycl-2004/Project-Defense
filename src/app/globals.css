@@ -1,26 +1,230 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/*
+ * Dark mode follows the system unless the user picked a theme (stored in a cookie and set as
+ * .light / .dark on <html> by the server, so there is no flash).
+ */
+@custom-variant dark {
+  &:where(.dark, .dark *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not(.light) *, :root:not(.light)) {
+      @slot;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@theme inline {
+  --font-sans: var(--font-ui), var(--font-cjk);
+  --font-display: var(--font-brand), var(--font-cjk);
+  --font-heading: var(--font-display);
+  --font-mono: var(--font-code), ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* Product palette */
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-sunken: var(--sunken);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-ink: var(--brand-ink);
+  --color-on-brand: var(--on-brand);
+  --color-clear: var(--clear);
+  --color-clear-soft: var(--clear-soft);
+  --color-partial: var(--partial);
+  --color-partial-soft: var(--partial-soft);
+  --color-miss: var(--miss);
+  --color-miss-soft: var(--miss-soft);
+  --color-blank: var(--blank);
+  --color-blank-soft: var(--blank-soft);
+  --color-clear-mark: var(--clear-mark);
+  --color-partial-mark: var(--partial-mark);
+  --color-miss-mark: var(--miss-mark);
+  --color-blank-mark: var(--blank-mark);
+  --color-code-bg: var(--code-bg);
+  --color-code-mark: var(--code-mark);
+
+  /* shadcn/ui names, mapped onto the palette */
+  --color-background: var(--paper);
+  --color-foreground: var(--ink);
+  --color-card: var(--surface);
+  --color-card-foreground: var(--ink);
+  --color-popover: var(--surface);
+  --color-popover-foreground: var(--ink);
+  --color-primary: var(--brand);
+  --color-primary-foreground: var(--on-brand);
+  --color-secondary: var(--sunken);
+  --color-secondary-foreground: var(--ink);
+  --color-muted: var(--sunken);
+  --color-muted-foreground: var(--ink-2);
+  --color-accent: var(--sunken);
+  --color-accent-foreground: var(--ink);
+  --color-destructive: var(--miss);
+  --color-border: var(--line);
+  --color-input: var(--line-strong);
+  --color-ring: var(--brand);
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 28px;
+  --radius-3xl: 36px;
+
+  --shadow-card: 0 1px 0 rgb(60 40 20 / 0.04), 0 8px 24px -12px rgb(60 40 20 / 0.12);
+  --shadow-lift: 0 1px 0 rgb(60 40 20 / 0.05), 0 18px 40px -18px rgb(60 40 20 / 0.28);
+
+  --animate-mark-in: mark-in 900ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  --animate-indeterminate: indeterminate 1.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  --animate-thinking: thinking 1.2s ease-in-out infinite;
+}
+
+:root {
+  --font-cjk: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+    "Noto Sans SC", sans-serif;
+  /* Each token holds its light and dark value; color-scheme decides which one applies. */
+  color-scheme: light dark;
+
+  --paper: light-dark(#fbf7f0, #1b1815);
+  --surface: light-dark(#ffffff, #231f1b);
+  --sunken: light-dark(#f4ede2, #2b2621);
+  --line: light-dark(#e8dfd1, #3a332c);
+  --line-strong: light-dark(#d9cdbb, #4a4138);
+  --ink: light-dark(#221e1a, #ede6dc);
+  --ink-2: light-dark(#6b6259, #a89e92);
+  --ink-3: light-dark(#8a8076, #857b70);
+
+  --brand: light-dark(#c94f25, #f08a5d);
+  --brand-strong: light-dark(#b0421c, #f49d75);
+  --brand-soft: light-dark(#fbe3d6, rgb(240 138 93 / 0.14));
+  --brand-ink: light-dark(#a63e1b, #f5a27c);
+  --on-brand: light-dark(#ffffff, #1b1815);
+
+  --clear: light-dark(#2a6f4c, #6fc59a);
+  --clear-soft: light-dark(#e1f0e7, rgb(111 197 154 / 0.13));
+  --partial: light-dark(#8a5a0c, #e8b45c);
+  --partial-soft: light-dark(#f8ebd2, rgb(232 180 92 / 0.13));
+  --miss: light-dark(#a83d33, #ef8a7e);
+  --miss-soft: light-dark(#f9e1dd, rgb(239 138 126 / 0.13));
+  --blank: light-dark(#5e564e, #a89e92);
+  --blank-soft: light-dark(#eee8df, rgb(168 158 146 / 0.12));
+
+  /* Chart marks for the four ratings; validated with the dataviz palette checker (always shown with icon + label). */
+  --clear-mark: light-dark(#1f7a4d, #3f9f72);
+  --partial-mark: light-dark(#b07a1a, #b9852a);
+  --miss-mark: light-dark(#b23a3a, #e0607a);
+  --blank-mark: light-dark(#bdb3a6, #5a5148);
+
+  --code-bg: light-dark(#fffdf9, #1f1b18);
+  --code-mark: light-dark(#fdebd9, rgb(240 138 93 / 0.13));
+}
+
+:root.light {
+  color-scheme: light;
+}
+:root.dark {
+  color-scheme: dark;
+}
+
+@keyframes mark-in {
+  from {
+    background-color: transparent;
+  }
+  to {
+    background-color: var(--code-mark);
+  }
+}
+
+@keyframes indeterminate {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(260%);
+  }
+}
+
+@keyframes thinking {
+  0%,
+  80%,
+  100% {
+    opacity: 0.25;
+    transform: translateY(0);
+  }
+  40% {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-brand/60;
+  }
+  html {
+    @apply font-sans;
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply bg-paper text-ink antialiased;
+    line-height: 1.6;
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  ::selection {
+    background: var(--brand-soft);
+    color: var(--ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Shiki dual themes: each token carries both colours as variables. */
+.shiki-token {
+  color: light-dark(var(--shiki-light), var(--shiki-dark));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media print {
+  body {
+    background: #fff;
+    color: #000;
+  }
+  .no-print {
+    display: none !important;
+  }
 }
