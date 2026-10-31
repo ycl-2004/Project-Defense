@@ -71,20 +71,34 @@ export class GitHubClient {
     }
   }
 
-  private async api<T>(path: string): Promise<T> {
+  /**
+   * The core REST quota for the configured token (not counted against it). GitHub grants 5,000
+   * requests per hour to a valid token and 60 without one; `rejected` means the token was refused.
+   */
+  async rateLimit(): Promise<{ limit: number; remaining: number; rejected: boolean }> {
+    const response = await this.request("/rate_limit");
+    if (response.status === 401) return { limit: 0, remaining: 0, rejected: true };
+    if (!response.ok) throw new AppError("upstream", `github ${response.status} /rate_limit`);
+    const body = (await response.json()) as { resources: { core: { limit: number; remaining: number } } };
+    return { ...body.resources.core, rejected: false };
+  }
+
+  private async request(path: string): Promise<Response> {
     const headers: Record<string, string> = {
       Accept: "application/vnd.github+json",
       "X-GitHub-Api-Version": "2022-11-28",
       "User-Agent": "project-defense",
     };
     if (this.token) headers.Authorization = `Bearer ${this.token}`;
-
-    let response: Response;
     try {
-      response = await this.fetchImpl(`https://api.github.com${path}`, { headers });
+      return await this.fetchImpl(`https://api.github.com${path}`, { headers });
     } catch (error) {
       throw new AppError("upstream", `github fetch failed: ${String(error)}`);
     }
+  }
+
+  private async api<T>(path: string): Promise<T> {
+    const response = await this.request(path);
     if (response.ok) return (await response.json()) as T;
     if (response.status === 404) throw new AppError("repo_not_found", path);
     if (response.status === 409) throw new AppError("empty_repo", path);

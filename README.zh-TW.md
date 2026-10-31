@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <img alt="狀態：原始碼建置" src="https://img.shields.io/badge/status-source%20build-111111">
+  <a href="https://project-defense-pink.vercel.app"><img alt="狀態：已上線" src="https://img.shields.io/badge/status-live-111111"></a>
   <img alt="Next.js 16.4" src="https://img.shields.io/badge/Next.js-16.4-111111?logo=nextdotjs">
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white">
   <img alt="DeepSeek deepseek-flash" src="https://img.shields.io/badge/AI-deepseek--flash-111111">
@@ -17,6 +17,7 @@
 </p>
 
 <p align="center">
+  <a href="https://project-defense-pink.vercel.app"><strong>打開線上網站</strong></a> ·
   <a href="#快速開始">快速開始</a> ·
   <a href="#運作方式">運作方式</a> ·
   <a href="#截圖">截圖</a> ·
@@ -30,7 +31,13 @@
 
 教練不打總分，只記錄證據：學生說了什麼，對照程式碼實際做了什麼。導師拿到的報告可以逐行核對，最後還附上一個小改動任務，讓學生接著做。網站沒有帳號也沒有資料庫，整場答辯只存在學生自己的瀏覽器裡。
 
-> **狀態（2026-10-30）：** 原始碼建置，版本 `0.1.0`。尚未部署，上線後會在這裡補上 Vercel 連結。目前已驗證：76 個單元測試、兩個模擬 AI 的 Playwright 測試、正式環境的 `next build`、在本倉庫上用真實 DeepSeek API 走完一整場（分析 → 出題 → 追問 → 提示 → 報告），以及在本倉庫和 [`vercel/ms`](https://github.com/vercel/ms) 上執行 `npm run eval:live`，所有引用的程式碼行都和真實檔案一致。
+<p align="center">
+  <img src="docs/demo.gif" alt="在線上網站真實跑一場：教練讀取本倉庫、針對引用的程式碼提問、追問含糊的回答、給出提示，最後寫出報告" width="720">
+</p>
+
+<p align="center"><sub>線上網站的真實一場答辯。等待 AI 的片段加速四到六倍，其餘都是實際速度。</sub></p>
+
+> **狀態（2026-10-30）：** 已上線 <https://project-defense-pink.vercel.app>，由 Vercel 從 `main` 自動部署。版本 `0.1.0`。目前已驗證：76 個單元測試、兩個模擬 AI 的 Playwright 測試、正式環境的 `next build`、在本倉庫上用真實 DeepSeek API 走完一整場（分析 → 出題 → 追問 → 提示 → 報告），以及在本倉庫和 [`vercel/ms`](https://github.com/vercel/ms) 上執行 `npm run eval:live`，所有引用的程式碼行都和真實檔案一致。
 
 ## 快速開始
 
@@ -149,6 +156,7 @@ flowchart LR
 2. **Add New → Project**，匯入 `Project-Defense`。Vercel 會自動辨識 Next.js，建置設定保持預設。
 3. 在 **Environment Variables** 加上 `DEEPSEEK_API_KEY`，最好也加上 `GITHUB_TOKEN`。不想對所有人開放的話，再加上 `ACCESS_CODE`。
 4. 按 **Deploy**。之後每次推送到 `main` 都會自動重新部署。
+5. 打開新網站的 `/api/health` 檢查設定。它會回報 DeepSeek 金鑰是否已設定、GitHub 是否接受 token（有效的 token 上限是 5,000），但絕不會回傳金鑰本身。
 
 API 路由的 `maxDuration` 設在 60 到 180 秒之間，在 Hobby 方案 300 秒的上限內。網站花的是擁有者的 DeepSeek 額度，帳戶裡只儲值少量金額，或設定 `ACCESS_CODE`。
 
@@ -158,6 +166,12 @@ API 路由的 `maxDuration` 設在 60 到 180 秒之間，在 Hobby 方案 300 �
 <summary>頁面顯示「網站還沒有配置 AI 密鑰」。</summary>
 
 伺服器上缺少 `DEEPSEEK_API_KEY`。本機請寫進 `.env.local` 後重新啟動 `npm run dev`；Vercel 上請在 Environment Variables 加上後重新部署。
+</details>
+
+<details>
+<summary>怎麼確認 GitHub token 有效？</summary>
+
+打開 `/api/health`。`tokenAccepted: true` 而且 `limit` 是 5,000，代表 GitHub 接受了這個 token；上限是 60 則表示網站目前沒有使用 token。
 </details>
 
 <details>

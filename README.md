@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <img alt="Status: source build" src="https://img.shields.io/badge/status-source%20build-111111">
+  <a href="https://project-defense-pink.vercel.app"><img alt="Status: live" src="https://img.shields.io/badge/status-live-111111"></a>
   <img alt="Next.js 16.4" src="https://img.shields.io/badge/Next.js-16.4-111111?logo=nextdotjs">
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white">
   <img alt="DeepSeek deepseek-flash" src="https://img.shields.io/badge/AI-deepseek--flash-111111">
@@ -17,6 +17,7 @@
 </p>
 
 <p align="center">
+  <a href="https://project-defense-pink.vercel.app"><strong>Open the live site</strong></a> ·
   <a href="#quick-start">Quick start</a> ·
   <a href="#how-it-works">How it works</a> ·
   <a href="#screenshots">Screenshots</a> ·
@@ -30,7 +31,13 @@ Teenagers in AI programming courses can now ship a working app in a weekend, oft
 
 The coach does not hand out a score. It records evidence: what the student said, next to what the code does. Mentors get a report they can verify line by line, plus one small code change to ask for next. The site has no accounts and no database; the session lives in the student's browser.
 
-> **Status (2026-10-30):** Source build, version `0.1.0`. Not deployed yet; the Vercel link will be added here once it is live. Verified so far: 76 unit tests, two Playwright tests with mocked AI, a production `next build`, a full browser session against the real DeepSeek API on this repository (analyse → plan → follow-up → hint → report), and `npm run eval:live` on this repository and [`vercel/ms`](https://github.com/vercel/ms), where every cited line matched the real file.
+<p align="center">
+  <img src="docs/demo.gif" alt="A real session on the live site: the coach reads this repository, asks a question about the cited code, follows up on a vague answer, gives a hint, and writes the report" width="720">
+</p>
+
+<p align="center"><sub>A real session on the live site. Waits for the AI are sped up four to six times; everything else is real time.</sub></p>
+
+> **Status (2026-10-30):** Live at <https://project-defense-pink.vercel.app>, deployed from `main` on Vercel. Version `0.1.0`. Verified so far: 76 unit tests, two Playwright tests with mocked AI, a production `next build`, a full browser session against the real DeepSeek API on this repository (analyse → plan → follow-up → hint → report), and `npm run eval:live` on this repository and [`vercel/ms`](https://github.com/vercel/ms), where every cited line matched the real file.
 
 ## Quick start
 
@@ -149,6 +156,7 @@ Captured with Playwright at 1440 × 900 from the local server on 2026-10-30. The
 2. **Add New → Project**, import `Project-Defense`. Vercel detects Next.js; keep the default build settings.
 3. Under **Environment Variables** add `DEEPSEEK_API_KEY`, and preferably `GITHUB_TOKEN`. Add `ACCESS_CODE` if the site should not be open to everyone.
 4. **Deploy.** Every push to `main` redeploys.
+5. Open `/api/health` on the new site to check the configuration. It reports whether the DeepSeek key is set and whether GitHub accepts the token (a valid token shows a limit of 5,000), without ever returning a key.
 
 The API routes set `maxDuration` between 60 and 180 seconds, inside the Hobby plan's 300-second limit. The site spends the owner's DeepSeek credit, so keep a small balance on the account or set `ACCESS_CODE`.
 
@@ -158,6 +166,12 @@ The API routes set `maxDuration` between 60 and 180 seconds, inside the Hobby pl
 <summary>The page says the site's AI key isn't configured.</summary>
 
 `DEEPSEEK_API_KEY` is missing on the server. Locally, put it in `.env.local` and restart `npm run dev`; on Vercel, add it under Environment Variables and redeploy.
+</details>
+
+<details>
+<summary>How do I know the GitHub token works?</summary>
+
+Open `/api/health`. `tokenAccepted: true` with a `limit` of 5,000 means GitHub accepted it; a limit of 60 means the site is running without a token.
 </details>
 
 <details>

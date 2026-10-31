@@ -72,3 +72,12 @@ describe("GitHubClient files", () => {
     expect(requested).toHaveLength(1);
   });
 });
+
+describe("GitHubClient.rateLimit", () => {
+  it("reads the core quota and flags a refused token", async () => {
+    const ok = fakeFetch({ "https://api.github.com/rate_limit": { body: { resources: { core: { limit: 5000, remaining: 4998 } } } } });
+    await expect(new GitHubClient("t", ok.impl).rateLimit()).resolves.toEqual({ limit: 5000, remaining: 4998, rejected: false });
+    const refused = fakeFetch({ "https://api.github.com/rate_limit": { status: 401 } });
+    await expect(new GitHubClient("bad", refused.impl).rateLimit()).resolves.toEqual({ limit: 0, remaining: 0, rejected: true });
+  });
+});
