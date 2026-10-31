@@ -7,8 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "test": "vitest run --project unit",
+    "typecheck": "tsc --noEmit",
+    "test:e2e": "playwright test",
+    "eval:live": "vitest run --project live"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
