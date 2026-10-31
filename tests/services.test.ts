@@ -59,6 +59,23 @@ describe("startInterview", () => {
     expect(llm.requests[0].user).toContain("Simplified Chinese");
   });
 
+  it("keeps a margin note only when it sits inside the cited lines", async () => {
+    const llm = new ScriptedLLM([
+      {
+        questions: Array.from({ length: 5 }, (_, index) => ({
+          ...question("src/extract.ts", 1, 3),
+          note: { line: index === 0 ? 2 : 40, text: "为什么？" },
+        })),
+      },
+    ]);
+    const result = await startInterview(
+      { github: new FakeGitHub(repoFiles), llm },
+      { repo: REPO, part, difficulty: "hard", count: 5, locale: "zh" },
+    );
+    expect(result.plan[0].note).toEqual({ line: 2, text: "为什么？" });
+    expect(result.plan[1].note).toBeUndefined();
+  });
+
   it("rejects Part files that are not readable source in the repo", async () => {
     const llm = new ScriptedLLM([]);
     await expect(

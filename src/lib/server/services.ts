@@ -139,6 +139,8 @@ export async function startInterview(deps: Deps, input: StartInput): Promise<Sta
   const plan = output.questions.map((question, index): PlannedQuestion => {
     const check = resolveCitation(question.citation, files);
     if (!check.ok) throw new AppError("llm_failed", check.reason);
+    const note = question.note;
+    const noteFits = !!note && note.text.trim() !== "" && note.line >= check.snippet.startLine && note.line <= check.snippet.endLine;
     return {
       id: `q${index + 1}`,
       // The slot decides the layer; the model only fills it in.
@@ -147,6 +149,7 @@ export async function startInterview(deps: Deps, input: StartInput): Promise<Sta
       question: question.question,
       focus: question.focus,
       snippet: check.snippet,
+      ...(noteFits ? { note: { line: note.line, text: note.text.trim().slice(0, 40) } } : {}),
     };
   });
 

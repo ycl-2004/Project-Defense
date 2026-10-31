@@ -1,22 +1,17 @@
 import { cn } from "@/lib/utils";
 
-/** A speech bubble holding a pair of code brackets: talking about your own code. */
+// 答 from Noto Serif SC Bold (SIL OFL), drawn as a path so the seal looks the same without CJK fonts.
+// The favicon (src/app/icon.svg) and docs/logo.svg carry the same outline.
+const SEAL_GLYPH =
+  "M12.18 16.65H16.74L17.88 15.19Q17.88 15.19 18.23 15.46Q18.59 15.74 19.07 16.13Q19.56 16.53 19.95 16.89Q19.87 17.22 19.4 17.22H12.34ZM11.51 23.43H20.51V23.99H11.51ZM10.19 19.15V18.15L12.78 19.15H20.17V19.73H12.66V24.79Q12.66 24.89 12.34 25.07Q12.01 25.25 11.53 25.39Q11.04 25.54 10.53 25.54H10.19ZM19.44 19.15H19.24L20.33 17.97L22.65 19.67Q22.56 19.77 22.38 19.9Q22.2 20.02 21.91 20.08V24.89Q21.91 24.95 21.57 25.09Q21.23 25.23 20.75 25.34Q20.27 25.46 19.87 25.46H19.44ZM16.66 12.41Q15.93 13.46 14.81 14.5Q13.7 15.53 12.33 16.47Q10.96 17.4 9.44 18.16Q7.91 18.92 6.37 19.43L6.25 19.19Q7.61 18.48 8.92 17.48Q10.23 16.49 11.37 15.34Q12.52 14.19 13.34 13.04Q14.16 11.88 14.51 10.89L17.96 11.72Q17.92 11.92 17.7 12.02Q17.49 12.12 17 12.19Q17.71 12.98 18.72 13.6Q19.72 14.21 20.9 14.68Q22.08 15.15 23.32 15.48Q24.55 15.82 25.75 16.08V16.37Q25.26 16.51 24.89 16.86Q24.51 17.22 24.28 17.65Q24.05 18.09 23.98 18.52Q22.38 17.87 20.96 16.99Q19.54 16.12 18.43 14.99Q17.33 13.85 16.66 12.41ZM9.42 6.46 12.34 7.54Q12.26 7.7 12.06 7.81Q11.87 7.92 11.53 7.9Q10.57 9.75 9.29 11.12Q8.02 12.49 6.53 13.4L6.31 13.2Q6.94 12.41 7.52 11.33Q8.1 10.26 8.59 9.01Q9.09 7.76 9.42 6.46ZM10.47 9.55Q11.59 9.85 12.18 10.31Q12.76 10.76 12.96 11.22Q13.15 11.68 13.03 12.07Q12.91 12.47 12.59 12.69Q12.28 12.92 11.86 12.89Q11.44 12.85 11.04 12.45Q11.08 11.96 10.97 11.45Q10.86 10.95 10.67 10.47Q10.49 9.99 10.27 9.63ZM17.53 6.48 20.56 7.56Q20.49 7.72 20.29 7.83Q20.09 7.94 19.76 7.92Q19.01 9.14 18.02 10.03Q17.02 10.93 15.95 11.48L15.69 11.31Q16.25 10.42 16.75 9.14Q17.25 7.86 17.53 6.48ZM18.79 9.47Q20.07 9.67 20.8 10.06Q21.53 10.46 21.81 10.95Q22.1 11.43 22.06 11.88Q22.02 12.33 21.71 12.62Q21.41 12.92 20.97 12.96Q20.54 13 20.05 12.63Q20.01 12.08 19.78 11.53Q19.56 10.97 19.25 10.46Q18.93 9.95 18.61 9.59ZM9.72 9.16H13.41L14.49 7.74Q14.49 7.74 14.81 8.02Q15.14 8.29 15.58 8.67Q16.03 9.06 16.4 9.43Q16.31 9.75 15.85 9.75H9.72ZM17.25 9.16H22.14L23.32 7.66Q23.32 7.66 23.68 7.94Q24.05 8.23 24.56 8.63Q25.08 9.04 25.49 9.43Q25.41 9.75 24.92 9.75H17.25Z";
+
+/** A square red seal holding 答: the mentor's mark, and the first character of the name. */
 export function LogoMark({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 32 32" aria-hidden className={cn("size-8 shrink-0", className)}>
-      <rect width="32" height="32" rx="9" fill="var(--brand)" />
-      <path
-        d="M9 8.5h14a3 3 0 0 1 3 3v7.2a3 3 0 0 1-3 3h-7l-4.6 3.6v-3.6H9a3 3 0 0 1-3-3v-7.2a3 3 0 0 1 3-3z"
-        fill="var(--on-brand)"
-      />
-      <path
-        d="M13.4 12.4 11 15.1l2.4 2.7M18.6 12.4l2.4 2.7-2.4 2.7"
-        fill="none"
-        stroke="var(--brand)"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+    <svg viewBox="0 0 32 32" aria-hidden className={cn("size-7 shrink-0", className)}>
+      <rect width="32" height="32" fill="var(--pen)" />
+      <rect x="2.5" y="2.5" width="27" height="27" fill="none" stroke="var(--paper)" strokeOpacity="0.55" strokeWidth="1" />
+      <path d={SEAL_GLYPH} fill="var(--paper)" />
     </svg>
   );
 }
@@ -25,9 +20,9 @@ export function Wordmark({ name, latin, className }: { name: string; latin: stri
   return (
     <span className={cn("flex items-center gap-2.5", className)}>
       <LogoMark />
-      <span className="flex flex-col leading-none">
-        <span className="font-display text-[17px] font-semibold tracking-[0.01em] text-ink">{name}</span>
-        <span className="mt-1 font-display text-[11px] font-medium tracking-[0.04em] text-ink-3">{latin}</span>
+      <span className="flex items-baseline gap-2">
+        <span className="font-serif text-[18px] font-semibold tracking-[0.06em] text-ink">{name}</span>
+        <span className="apparatus hidden text-[14px] text-ink-3 sm:inline">{latin}</span>
       </span>
     </span>
   );

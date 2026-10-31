@@ -1,119 +1,115 @@
 "use client";
 
-import { Lightbulb } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { usePrefs } from "@/components/providers";
-import { Bubble } from "@/components/shared/bubble";
-import { RichText } from "@/components/shared/rich-text";
 import { CitationChip } from "@/components/shared/citation-chip";
-import { DifficultyTag, LayerTag } from "@/components/shared/tags";
+import { RichText } from "@/components/shared/rich-text";
+import { DifficultyTag } from "@/components/shared/tags";
 import { Thinking } from "@/components/shared/thinking";
+import { Turn } from "@/components/shared/turn";
 import { LIMITS } from "@/lib/config";
 import type { Citation, PlannedQuestion, Thread } from "@/lib/domain";
 import { cn } from "@/lib/utils";
 
 const rise = {
-  initial: { opacity: 0, y: 10 },
+  initial: { opacity: 0, y: 8 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.35, ease: [0.2, 0.8, 0.2, 1] as const },
+  transition: { duration: 0.32, ease: [0.16, 1, 0.3, 1] as const },
 };
 
-export function FollowUpBadge({ count }: { count: number }) {
+/** The running head over a question: number and layer on the left, difficulty on the right. */
+export function QuestionHead({ question, number, total }: { question: PlannedQuestion; number: number; total: number }) {
   const { t, f } = usePrefs();
   return (
-    <span className="rounded-full bg-brand-soft px-2 py-0.5 text-[11.5px] font-medium text-brand-ink">
-      {f(t.interview.followUp, { count, max: LIMITS.maxFollowUps })}
-    </span>
-  );
-}
-
-export function QuestionHeader({
-  question,
-  number,
-  total,
-  onCite,
-  large,
-}: {
-  question: PlannedQuestion;
-  number: number;
-  total: number;
-  onCite: (citation: Citation) => void;
-  large?: boolean;
-}) {
-  const { t, f } = usePrefs();
-  return (
-    <div className="flex flex-col gap-3">
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="tabular text-[12.5px] text-ink-3">{f(t.interview.progress, { current: number, total })}</span>
-        <LayerTag layer={question.layer} />
-        <DifficultyTag difficulty={question.difficulty} />
-      </div>
-      <h2
-        className={cn(
-          "font-display font-semibold text-ink",
-          large ? "text-[19px] leading-[1.65] sm:text-[21px]" : "text-[15.5px] leading-[1.6]",
-        )}
-      >
-        <RichText text={question.question} />
-      </h2>
-      <CitationChip citation={question.snippet} onClick={() => onCite(question.snippet)} className="self-start" />
+    <div className="flex items-center justify-between gap-4 border-b border-rule pb-2.5 text-[13px] text-ink-2">
+      <span className="flex items-center gap-2">
+        <span className="font-medium text-ink tabular">{f(t.interview.progress, { current: number, total })}</span>
+        <span className="text-rule-strong" aria-hidden>
+          /
+        </span>
+        <span>{t.layer[question.layer].name}</span>
+      </span>
+      <DifficultyTag difficulty={question.difficulty} />
     </div>
   );
 }
 
-/** The exchanges of one question after its main prompt: answers, follow-ups, hints, and the coach thinking. */
+export function QuestionText({
+  question,
+  refs,
+  onCite,
+  size = "large",
+}: {
+  question: PlannedQuestion;
+  refs?: number[];
+  onCite: (citation: Citation) => void;
+  size?: "large" | "small";
+}) {
+  return (
+    <div className="flex flex-col gap-3">
+      <h2
+        className={cn(
+          "font-serif font-semibold text-ink",
+          size === "large" ? "text-[19px] leading-[1.75] sm:text-[22px]" : "text-[16px] leading-[1.7]",
+        )}
+      >
+        <RichText text={question.question} refs={refs} />
+      </h2>
+      <CitationChip citation={question.snippet} onClick={() => onCite(question.snippet)} className="-ml-1 self-start" />
+    </div>
+  );
+}
+
+/** Answers, follow-ups and hints after a question's main prompt. */
 export function ThreadExchanges({
   thread,
   onCite,
   thinking,
   hinting,
+  refs,
 }: {
   thread: Thread;
   onCite: (citation: Citation) => void;
   thinking?: boolean;
   hinting?: boolean;
+  refs?: number[];
 }) {
-  const { t } = usePrefs();
+  const { t, f } = usePrefs();
   const followUpNumber = (index: number) =>
     thread.exchanges.slice(0, index + 1).filter((exchange) => exchange.kind === "followup").length;
+  const lastIndex = thread.exchanges.length - 1;
+
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-6">
       <AnimatePresence initial={false}>
-        {thread.exchanges.map((exchange, index) => {
-          return (
-            <motion.div key={index} {...rise} className="flex flex-col gap-4">
-              {exchange.kind === "followup" && (
-                <Bubble side="coach" label={t.interview.coach} badge={<FollowUpBadge count={followUpNumber(index)} />}>
-                  <RichText text={exchange.prompt} />
-                  {exchange.snippet && (
-                    <span className="mt-2.5 flex">
-                      <CitationChip citation={exchange.snippet} onClick={() => onCite(exchange.snippet!)} />
-                    </span>
-                  )}
-                </Bubble>
-              )}
-              {exchange.answer && (
-                <Bubble side="you" label={t.interview.you}>
-                  <RichText text={exchange.answer} />
-                </Bubble>
-              )}
-              {exchange.skipped && (
-                <span className="self-end rounded-full bg-blank-soft px-2.5 py-1 text-[12.5px] font-medium text-blank">{t.interview.skipped}</span>
-              )}
-            </motion.div>
-          );
-        })}
+        {thread.exchanges.map((exchange, index) => (
+          <motion.div key={index} {...rise} className="flex flex-col gap-6">
+            {exchange.kind === "followup" && (
+              <Turn
+                who="mentor"
+                label={f(t.interview.followUp, { count: followUpNumber(index), max: LIMITS.maxFollowUps })}
+                aside={
+                  exchange.snippet && <CitationChip citation={exchange.snippet} onClick={() => onCite(exchange.snippet!)} className="h-6" />
+                }
+              >
+                <RichText text={exchange.prompt} refs={index === lastIndex ? refs : undefined} />
+              </Turn>
+            )}
+            {exchange.answer && (
+              <Turn who="student" label={t.interview.you}>
+                <RichText text={exchange.answer} />
+              </Turn>
+            )}
+            {exchange.skipped && (
+              <span className="self-start border border-rule-strong px-2 py-0.5 text-[12.5px] text-ink-2">{t.interview.skipped}</span>
+            )}
+          </motion.div>
+        ))}
         {thread.hints.map((hint, index) => (
-          <motion.div
-            key={`hint-${index}`}
-            {...rise}
-            className="flex gap-3 rounded-2xl border border-partial/20 bg-partial-soft px-4 py-3 text-[14.5px] leading-[1.65] text-ink"
-          >
-            <Lightbulb className="mt-0.5 size-4 shrink-0 text-partial" aria-hidden />
-            <span>
-              <span className="sr-only">{t.interview.hintLabel}: </span>
+          <motion.div key={`hint-${index}`} {...rise}>
+            <Turn who="hint" label={t.interview.hintLabel}>
               <RichText text={hint} />
-            </span>
+            </Turn>
           </motion.div>
         ))}
         {(thinking || hinting) && (

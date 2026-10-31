@@ -3,8 +3,8 @@
 @import "shadcn/tailwind.css";
 
 /*
- * Dark mode follows the system unless the user picked a theme (stored in a cookie and set as
- * .light / .dark on <html> by the server, so there is no flash).
+ * Dark mode follows the system unless the user picked a theme (a cookie the server applies as
+ * .light / .dark on <html>, so there is no flash).
  */
 @custom-variant dark {
   &:where(.dark, .dark *) {
@@ -18,113 +18,84 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-ui), var(--font-cjk);
-  --font-display: var(--font-brand), var(--font-cjk);
-  --font-heading: var(--font-display);
+  --font-sans: var(--font-cjk-sans);
+  --font-serif: var(--font-latin-serif), var(--font-cjk-serif);
+  --font-hand: var(--font-cjk-hand);
   --font-mono: var(--font-code), ui-monospace, "SF Mono", Menlo, monospace;
+  --font-heading: var(--font-serif);
 
-  /* Product palette */
+  /* The exercise book */
   --color-paper: var(--paper);
   --color-surface: var(--surface);
   --color-sunken: var(--sunken);
-  --color-line: var(--line);
-  --color-line-strong: var(--line-strong);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
   --color-ink: var(--ink);
   --color-ink-2: var(--ink-2);
   --color-ink-3: var(--ink-3);
-  --color-brand: var(--brand);
-  --color-brand-strong: var(--brand-strong);
-  --color-brand-soft: var(--brand-soft);
-  --color-brand-ink: var(--brand-ink);
-  --color-on-brand: var(--on-brand);
-  --color-clear: var(--clear);
-  --color-clear-soft: var(--clear-soft);
-  --color-partial: var(--partial);
-  --color-partial-soft: var(--partial-soft);
-  --color-miss: var(--miss);
-  --color-miss-soft: var(--miss-soft);
-  --color-blank: var(--blank);
-  --color-blank-soft: var(--blank-soft);
-  --color-clear-mark: var(--clear-mark);
-  --color-partial-mark: var(--partial-mark);
-  --color-miss-mark: var(--miss-mark);
-  --color-blank-mark: var(--blank-mark);
-  --color-code-bg: var(--code-bg);
-  --color-code-mark: var(--code-mark);
+  /* The mentor's red pen and the student's ballpoint */
+  --color-pen: var(--pen);
+  --color-pen-wash: var(--pen-wash);
+  --color-ballpoint: var(--ballpoint);
+  --color-ballpoint-wash: var(--ballpoint-wash);
 
-  /* shadcn/ui names, mapped onto the palette */
+  /* shadcn/ui names, mapped onto the book */
   --color-background: var(--paper);
   --color-foreground: var(--ink);
   --color-card: var(--surface);
   --color-card-foreground: var(--ink);
   --color-popover: var(--surface);
   --color-popover-foreground: var(--ink);
-  --color-primary: var(--brand);
-  --color-primary-foreground: var(--on-brand);
+  --color-primary: var(--ink);
+  --color-primary-foreground: var(--paper);
   --color-secondary: var(--sunken);
   --color-secondary-foreground: var(--ink);
   --color-muted: var(--sunken);
   --color-muted-foreground: var(--ink-2);
   --color-accent: var(--sunken);
   --color-accent-foreground: var(--ink);
-  --color-destructive: var(--miss);
-  --color-border: var(--line);
-  --color-input: var(--line-strong);
-  --color-ring: var(--brand);
+  --color-destructive: var(--pen);
+  --color-border: var(--rule);
+  --color-input: var(--rule-strong);
+  --color-ring: var(--ballpoint);
 
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
-  --radius-2xl: 28px;
-  --radius-3xl: 36px;
+  /* Ruled, not rounded: every corner in the world is square. */
+  --radius-xs: 0px;
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-3xl: 0px;
+  --radius-4xl: 0px;
 
-  --shadow-card: 0 1px 0 rgb(60 40 20 / 0.04), 0 8px 24px -12px rgb(60 40 20 / 0.12);
-  --shadow-lift: 0 1px 0 rgb(60 40 20 / 0.05), 0 18px 40px -18px rgb(60 40 20 / 0.28);
-
-  --animate-mark-in: mark-in 900ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-  --animate-indeterminate: indeterminate 1.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  --animate-mark-in: mark-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-indeterminate: indeterminate 1.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   --animate-thinking: thinking 1.2s ease-in-out infinite;
 }
 
 :root {
-  --font-cjk: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+  --font-cjk-sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
     "Noto Sans SC", sans-serif;
-  /* Each token holds its light and dark value; color-scheme decides which one applies. */
+  --font-cjk-serif: "Songti SC", "STSong", "Noto Serif SC", "SimSun", serif;
+  --font-cjk-hand: "Kaiti SC", "STKaiti", "KaiTi", "BiauKai", "Songti SC", serif;
+
+  /* Each token holds its light and dark value; color-scheme decides which applies. */
   color-scheme: light dark;
 
-  --paper: light-dark(#fbf7f0, #1b1815);
-  --surface: light-dark(#ffffff, #231f1b);
-  --sunken: light-dark(#f4ede2, #2b2621);
-  --line: light-dark(#e8dfd1, #3a332c);
-  --line-strong: light-dark(#d9cdbb, #4a4138);
-  --ink: light-dark(#221e1a, #ede6dc);
-  --ink-2: light-dark(#6b6259, #a89e92);
-  --ink-3: light-dark(#8a8076, #857b70);
+  --paper: light-dark(#fafbfc, #131417);
+  --surface: light-dark(#ffffff, #18191d);
+  --sunken: light-dark(#f1f3f6, #1e2024);
+  --rule: light-dark(#dfe5ec, #2a2d33);
+  --rule-strong: light-dark(#c5cdd7, #3a3e46);
+  --ink: light-dark(#16171b, #e8e8e5);
+  --ink-2: light-dark(#4f545c, #a3a8b1);
+  --ink-3: light-dark(#6a707a, #868c96);
 
-  --brand: light-dark(#c94f25, #f08a5d);
-  --brand-strong: light-dark(#b0421c, #f49d75);
-  --brand-soft: light-dark(#fbe3d6, rgb(240 138 93 / 0.14));
-  --brand-ink: light-dark(#a63e1b, #f5a27c);
-  --on-brand: light-dark(#ffffff, #1b1815);
-
-  --clear: light-dark(#2a6f4c, #6fc59a);
-  --clear-soft: light-dark(#e1f0e7, rgb(111 197 154 / 0.13));
-  --partial: light-dark(#8a5a0c, #e8b45c);
-  --partial-soft: light-dark(#f8ebd2, rgb(232 180 92 / 0.13));
-  --miss: light-dark(#a83d33, #ef8a7e);
-  --miss-soft: light-dark(#f9e1dd, rgb(239 138 126 / 0.13));
-  --blank: light-dark(#5e564e, #a89e92);
-  --blank-soft: light-dark(#eee8df, rgb(168 158 146 / 0.12));
-
-  /* Chart marks for the four ratings; validated with the dataviz palette checker (always shown with icon + label). */
-  --clear-mark: light-dark(#1f7a4d, #3f9f72);
-  --partial-mark: light-dark(#b07a1a, #b9852a);
-  --miss-mark: light-dark(#b23a3a, #e0607a);
-  --blank-mark: light-dark(#bdb3a6, #5a5148);
-
-  --code-bg: light-dark(#fffdf9, #1f1b18);
-  --code-mark: light-dark(#fdebd9, rgb(240 138 93 / 0.13));
+  --pen: light-dark(#c8352a, #f07466);
+  --pen-wash: light-dark(rgb(200 53 42 / 0.055), rgb(240 116 102 / 0.09));
+  --ballpoint: light-dark(#2a5ba6, #8fb4ee);
+  --ballpoint-wash: light-dark(#edf2f9, rgb(143 180 238 / 0.1));
 }
 
 :root.light {
@@ -139,7 +110,7 @@
     background-color: transparent;
   }
   to {
-    background-color: var(--code-mark);
+    background-color: var(--pen-wash);
   }
 }
 
@@ -157,26 +128,26 @@
   80%,
   100% {
     opacity: 0.25;
-    transform: translateY(0);
   }
   40% {
     opacity: 1;
-    transform: translateY(-2px);
   }
 }
 
 @layer base {
   * {
-    @apply border-border outline-brand/60;
+    @apply border-rule;
   }
   html {
     @apply font-sans;
     -webkit-text-size-adjust: 100%;
     text-rendering: optimizeLegibility;
+    scrollbar-color: var(--rule-strong) transparent;
   }
   body {
     @apply bg-paper text-ink antialiased;
     line-height: 1.6;
+    caret-color: var(--ballpoint);
   }
   h1,
   h2,
@@ -187,12 +158,32 @@
     text-wrap: pretty;
   }
   ::selection {
-    background: var(--brand-soft);
+    background: var(--ballpoint-wash);
     color: var(--ink);
   }
   :focus-visible {
-    outline: 2px solid var(--brand);
+    outline: 2px solid var(--ballpoint);
     outline-offset: 2px;
+  }
+  a {
+    text-underline-offset: 0.25em;
+    text-decoration-thickness: 1px;
+  }
+  ::placeholder {
+    color: var(--ink-3);
+    opacity: 1;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--rule-strong);
+    border: 3px solid transparent;
+    background-clip: padding-box;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
   }
   button:not(:disabled),
   [role="button"]:not(:disabled) {
@@ -201,11 +192,19 @@
   .tabular {
     font-variant-numeric: tabular-nums;
   }
+  /* Apparatus: small caps for Latin labels, a little air for Chinese ones. */
+  .apparatus {
+    font-family: var(--font-serif);
+    font-variant-caps: all-small-caps;
+    letter-spacing: 0.08em;
+  }
 }
 
 /* Shiki dual themes: each token carries both colours as variables. */
 .shiki-token {
   color: light-dark(var(--shiki-light), var(--shiki-dark));
+  /* Both ink themes bold the same tokens, so the light variable stands for both. */
+  font-weight: var(--shiki-light-font-weight, inherit);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -237,9 +236,5 @@
   h2,
   h3 {
     break-after: avoid;
-  }
-  .shadow-card,
-  .shadow-lift {
-    box-shadow: none !important;
   }
 }

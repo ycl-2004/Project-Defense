@@ -1,13 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { Bricolage_Grotesque, Figtree, JetBrains_Mono } from "next/font/google";
+import { JetBrains_Mono, Source_Serif_4 } from "next/font/google";
 import { cookies, headers } from "next/headers";
 import { Providers } from "@/components/providers";
 import { htmlLang, LOCALE_COOKIE, parseLocale, parseTheme, THEME_COOKIE } from "@/lib/preferences";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 
-const brand = Bricolage_Grotesque({ subsets: ["latin"], variable: "--font-brand", display: "swap" });
-const ui = Figtree({ subsets: ["latin"], variable: "--font-ui", display: "swap" });
+// Latin numerals, apparatus small caps and printed headings; Chinese uses the system Song, Kai and sans.
+const serif = Source_Serif_4({ subsets: ["latin"], variable: "--font-latin-serif", display: "swap" });
 const code = JetBrains_Mono({ subsets: ["latin"], variable: "--font-code", display: "swap" });
 
 export const metadata: Metadata = {
@@ -18,8 +18,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#fbf7f0" },
-    { media: "(prefers-color-scheme: dark)", color: "#1b1815" },
+    { media: "(prefers-color-scheme: light)", color: "#fafbfc" },
+    { media: "(prefers-color-scheme: dark)", color: "#131417" },
   ],
 };
 
@@ -33,7 +33,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   const theme = parseTheme(store.get(THEME_COOKIE)?.value);
 
   return (
-    <html lang={htmlLang(locale)} className={cn(brand.variable, ui.variable, code.variable, theme)}>
+    <html lang={htmlLang(locale)} className={cn(serif.variable, code.variable, theme)}>
       <body className="min-h-dvh">
         <Providers locale={locale} theme={theme}>
           {children}

@@ -6,9 +6,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { usePrefs } from "@/components/providers";
 import { EmptyState, PageSkeleton } from "@/components/shared/empty-state";
-import { RichText } from "@/components/shared/rich-text";
+import { RichText, mentionedLines } from "@/components/shared/rich-text";
 import { SiteHeader } from "@/components/shared/site-header";
-import { Button } from "@/components/ui/button";
 import { api, errorCodeOf, type ClientErrorCode } from "@/lib/client/api";
 import { useHydrated, useSession, type ActiveSession } from "@/lib/client/session-store";
 import { useIsDesktop } from "@/lib/client/use-media";
@@ -27,7 +26,7 @@ import { CodePanel, type CodeFocus } from "./code-panel";
 import { Composer } from "./composer";
 import { FinishedCard } from "./finished-card";
 import { InterviewProgress } from "./progress-bar";
-import { QuestionHeader, ThreadExchanges } from "./thread-view";
+import { QuestionHead, QuestionText, ThreadExchanges } from "./thread-view";
 
 const MAX_HINTS_PER_QUESTION = 3;
 
@@ -54,7 +53,7 @@ export function InterviewView() {
     return (
       <div className="min-h-dvh">
         <SiteHeader />
-        <EmptyState icon={<MessagesSquare className="size-5" />} title={t.interview.noInterview} body={t.interview.noInterviewLead} action={t.setup.goHome} href="/" />
+        <EmptyState icon={<MessagesSquare className="size-5" strokeWidth={1.5} />} title={t.interview.noInterview} body={t.interview.noInterviewLead} action={t.setup.goHome} href="/" />
       </div>
     );
   }
@@ -62,7 +61,7 @@ export function InterviewView() {
 }
 
 function Workspace({ session }: { session: ActiveSession }) {
-  const { t } = usePrefs();
+  const { t, f } = usePrefs();
   const router = useRouter();
   const isDesktop = useIsDesktop();
   const report = useSession((state) => state.report);
@@ -93,6 +92,22 @@ function Workspace({ session }: { session: ActiveSession }) {
     setManualFocus({ key: turnKey, focus: { path: citation.path, startLine: citation.startLine, endLine: citation.endLine } });
     setShowCode(true);
   };
+
+  // The rail: the question's key at its first cited line, a key per follow-up that cites code.
+  const railKeys = interview.finished
+    ? []
+    : [
+        { path: question.snippet.path, line: question.snippet.startLine, label: f(t.interview.railQuestion, { n: interview.index + 1 }), filled: true },
+        ...(thread?.exchanges ?? [])
+          .filter((item) => item.kind === "followup" && item.snippet)
+          .map((item, index) => ({ path: item.snippet!.path, line: item.snippet!.startLine, label: f(t.interview.railFollowUp, { n: index + 1 }) })),
+      ];
+  // Lines the question and its latest follow-up name stay circled for the whole question.
+  const inQuestionFile = !interview.finished && focus.path === question.snippet.path;
+  const followUpPrompt = exchange?.kind === "followup" ? exchange.prompt : "";
+  const refs = inQuestionFile ? [...new Set([...mentionedLines(question.question), ...mentionedLines(followUpPrompt)])] : [];
+  const questionRefs = refs;
+  const notes = !interview.finished && question.note ? [{ path: question.snippet.path, ...question.note }] : [];
 
   const awaitingDecision = !interview.finished && !!exchange?.answer;
   const hasReport = !!report && report.createdAt >= session.startedAt;
@@ -167,15 +182,25 @@ function Workspace({ session }: { session: ActiveSession }) {
 
   const followUpTotal = interview.threads.reduce((sum, item) => sum + followUpsUsed(item), 0);
   const errorText = error ? t.errors[error] : null;
+  const codePanel = (className?: string) => (
+    <CodePanel
+      repo={repo}
+      files={part.files}
+      focus={focus}
+      onFocus={(next) => setManualFocus({ key: turnKey, focus: next })}
+      keys={railKeys}
+      refs={refs}
+      notes={notes}
+      className={className}
+    />
+  );
 
   const conversation = (
     <>
-      {earlier.length > 0 && (
-        <EarlierQuestions threads={earlier} plan={interview.plan} onCite={cite} />
-      )}
+      {earlier.length > 0 && <EarlierQuestions threads={earlier} plan={interview.plan} onCite={cite} />}
 
       {interview.finished ? (
-        <div ref={currentRef} className="scroll-mt-4">
+        <div ref={currentRef} className="scroll-mt-10">
           <FinishedCard
             questions={interview.plan.length}
             followUps={followUpTotal}
@@ -188,23 +213,26 @@ function Workspace({ session }: { session: ActiveSession }) {
         </div>
       ) : (
         thread && (
-          <div ref={currentRef} key={question.id} className="flex scroll-mt-4 flex-col gap-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
-            <QuestionHeader question={question} number={interview.index + 1} total={interview.plan.length} onCite={cite} large />
+          <div ref={currentRef} key={question.id} className="flex scroll-mt-10 flex-col gap-7 animate-in fade-in slide-in-from-bottom-1 duration-300">
+            <div className="flex flex-col gap-5">
+              <QuestionHead question={question} number={interview.index + 1} total={interview.plan.length} />
+              <QuestionText question={question} refs={questionRefs} onCite={cite} />
+            </div>
             {!isDesktop && (
               <div className="flex flex-col gap-3">
-                <Button
-                  variant="outline"
+                <button
+                  type="button"
                   onClick={() => setShowCode((value) => !value)}
-                  className="h-10 self-start rounded-xl border-line-strong px-3.5 text-[14px]"
+                  className="inline-flex h-10 items-center gap-2 self-start border border-rule-strong px-3.5 text-[14px] text-ink"
                   aria-expanded={showCode}
                 >
-                  <Code2 className="size-4" />
+                  <Code2 className="size-4" strokeWidth={1.5} />
                   {showCode ? t.interview.hideCode : t.interview.showCode}
-                </Button>
-                {showCode && <CodePanel repo={repo} files={part.files} focus={focus} onFocus={(next) => setManualFocus({ key: turnKey, focus: next })} className="h-[58vh]" />}
+                </button>
+                {showCode && codePanel("h-[58vh] border border-rule-strong")}
               </div>
             )}
-            <ThreadExchanges thread={thread} onCite={cite} thinking={busy === "turn"} hinting={busy === "hint"} />
+            <ThreadExchanges thread={thread} onCite={cite} thinking={busy === "turn"} hinting={busy === "hint"} refs={exchange?.kind === "followup" ? refs : undefined} />
             <div ref={endRef} />
           </div>
         )
@@ -215,7 +243,7 @@ function Workspace({ session }: { session: ActiveSession }) {
   const composer = !interview.finished && (
     <div className="flex flex-col gap-2">
       {errorText && (
-        <div role="alert" className="flex flex-wrap items-center gap-x-3 gap-y-1 px-2 text-[14px] text-miss">
+        <div role="alert" className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[14px] text-pen">
           <span>{errorText}</span>
           {awaitingDecision && (
             <button type="button" className="font-medium underline underline-offset-4" onClick={() => void requestTurn()}>
@@ -225,10 +253,10 @@ function Workspace({ session }: { session: ActiveSession }) {
         </div>
       )}
       {awaitingDecision && busy !== "turn" && !errorText ? (
-        <Button onClick={() => void requestTurn()} className="h-12 rounded-2xl text-[15px]">
+        <button type="button" onClick={() => void requestTurn()} className="inline-flex h-12 items-center justify-center gap-2 bg-ink text-[15px] font-medium text-paper">
           {t.common.retry}
-          <ChevronRight className="size-4" />
-        </Button>
+          <ChevronRight className="size-4" strokeWidth={1.5} />
+        </button>
       ) : (
         <Composer
           value={draft}
@@ -244,28 +272,27 @@ function Workspace({ session }: { session: ActiveSession }) {
     </div>
   );
 
+  const progress = <InterviewProgress plan={interview.plan} threads={interview.threads} index={interview.index} finished={interview.finished} />;
   const header = (
-    <SiteHeader wide center={isDesktop ? <InterviewProgress plan={interview.plan} index={interview.index} finished={interview.finished} /> : undefined}>
-      <Button asChild variant="ghost" size="sm" className="h-9 gap-1.5 rounded-full px-3 text-ink-2 hover:text-ink">
-        <Link href="/setup">
-          <LogOut className="size-4" />
-          <span className="hidden sm:inline">{t.interview.leave}</span>
-        </Link>
-      </Button>
+    <SiteHeader wide center={isDesktop ? progress : undefined}>
+      <Link href="/setup" className="inline-flex h-8 items-center gap-1.5 px-2 text-[13.5px] text-ink-2 transition-colors hover:bg-sunken hover:text-ink">
+        <LogOut className="size-4" strokeWidth={1.5} />
+        <span className="hidden sm:inline">{t.interview.leave}</span>
+      </Link>
     </SiteHeader>
   );
 
   if (isDesktop) {
     return (
-      <div className="flex h-dvh flex-col">
+      <div className="flex h-dvh flex-col bg-paper">
         {header}
-        <div className="grid min-h-0 flex-1 grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] gap-6 px-6 pb-6">
-          <CodePanel repo={repo} files={part.files} focus={focus} onFocus={(next) => setManualFocus({ key: turnKey, focus: next })} />
+        <div className="grid min-h-0 flex-1 grid-cols-[minmax(0,1.12fr)_minmax(0,0.88fr)]">
+          {codePanel("border-r border-rule-strong")}
           <div className="flex min-h-0 flex-col">
-            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-1 pb-6 pt-4 [mask-image:linear-gradient(to_bottom,transparent,black_20px,black_calc(100%-20px),transparent)]">
-              <div className="mx-auto flex max-w-[640px] flex-col gap-8">{conversation}</div>
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-10 pb-8 pt-7 [mask-image:linear-gradient(to_bottom,transparent,black_16px,black_calc(100%-16px),transparent)]">
+              <div className="mx-auto flex max-w-[620px] flex-col gap-9">{conversation}</div>
             </div>
-            {composer && <div className="mx-auto w-full max-w-[640px] shrink-0">{composer}</div>}
+            {composer && <div className="mx-auto w-full max-w-[700px] shrink-0 px-10 pb-6 pt-2">{composer}</div>}
           </div>
         </div>
       </div>
@@ -273,13 +300,11 @@ function Workspace({ session }: { session: ActiveSession }) {
   }
 
   return (
-    <div className="flex min-h-dvh flex-col">
+    <div className="flex min-h-dvh flex-col bg-paper">
       {header}
-      <div className="px-5 pb-3">
-        <InterviewProgress plan={interview.plan} index={interview.index} finished={interview.finished} />
-      </div>
-      <main className={cn("flex flex-1 flex-col gap-8 px-5 pt-3", composer ? "pb-6" : "pb-10")}>{conversation}</main>
-      {composer && <div className="sticky bottom-0 z-10 border-t border-line bg-paper/95 px-3 pb-3 pt-2.5 backdrop-blur-md">{composer}</div>}
+      <div className="border-b border-rule px-5 py-3">{progress}</div>
+      <main className={cn("flex flex-1 flex-col gap-8 px-5 pt-6", composer ? "pb-6" : "pb-10")}>{conversation}</main>
+      {composer && <div className="sticky bottom-0 z-10 border-t border-rule-strong bg-paper/95 px-4 pb-3 pt-3 backdrop-blur-md">{composer}</div>}
     </div>
   );
 }
@@ -287,25 +312,25 @@ function Workspace({ session }: { session: ActiveSession }) {
 function EarlierQuestions({ threads, plan, onCite }: { threads: Thread[]; plan: PlannedQuestion[]; onCite: (citation: Citation) => void }) {
   const { t } = usePrefs();
   return (
-    <section className="flex flex-col gap-2" aria-label={t.interview.earlier}>
-      <h3 className="px-1 text-[12.5px] font-medium text-ink-3">{t.interview.earlier}</h3>
+    <section className="flex flex-col" aria-label={t.interview.earlier}>
+      <h3 className="pb-2 text-[12.5px] font-medium text-ink-3">{t.interview.earlier}</h3>
       {threads.map((thread) => {
         const index = plan.findIndex((item) => item.id === thread.questionId);
         const question = plan[index];
         if (!question) return null;
         const skipped = thread.exchanges.some((exchange) => exchange.skipped);
         return (
-          <details key={thread.questionId} className="group rounded-2xl border border-line bg-surface/70 open:bg-surface">
-            <summary className="flex cursor-pointer list-none items-center gap-3 px-4 py-3 [&::-webkit-details-marker]:hidden">
-              <span className="tabular grid size-6 shrink-0 place-items-center rounded-full bg-sunken text-[12px] font-semibold text-ink-2">{index + 1}</span>
-              <span className="min-w-0 flex-1 truncate text-[14px] text-ink">
+          <details key={thread.questionId} className="group border-t border-rule last:border-b">
+            <summary className="flex cursor-pointer list-none items-center gap-3 py-3 [&::-webkit-details-marker]:hidden">
+              <span className="grid size-[20px] shrink-0 place-items-center bg-ink font-serif text-[11.5px] text-paper tabular">{index + 1}</span>
+              <span className="min-w-0 flex-1 truncate text-[14px] text-ink-2">
                 <RichText text={question.question} />
               </span>
-              {skipped && <span className="shrink-0 rounded-full bg-blank-soft px-2 py-0.5 text-[11.5px] text-blank">{t.interview.skipped}</span>}
-              <ChevronRight className="size-4 shrink-0 text-ink-3 transition-transform group-open:rotate-90" />
+              {skipped && <span className="shrink-0 border border-rule-strong px-1.5 text-[11.5px] text-ink-3">{t.interview.skipped}</span>}
+              <ChevronRight className="size-4 shrink-0 text-ink-3 transition-transform group-open:rotate-90" strokeWidth={1.5} />
             </summary>
-            <div className="flex flex-col gap-4 border-t border-line px-4 pb-4 pt-4">
-              <QuestionHeader question={question} number={index + 1} total={plan.length} onCite={onCite} />
+            <div className="flex flex-col gap-5 pb-6 pt-1">
+              <QuestionText question={question} onCite={onCite} size="small" />
               <ThreadExchanges thread={thread} onCite={onCite} />
             </div>
           </details>
@@ -314,4 +339,3 @@ function EarlierQuestions({ threads, plan, onCite }: { threads: Thread[]; plan: 
     </section>
   );
 }
-

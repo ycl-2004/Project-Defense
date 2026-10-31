@@ -1,0 +1,384 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-31T05:57:06.034971+00:00",
+  "title": "Design System: Project Defense",
+  "extensions": {
+    "colorMeta": {
+      "paper": {
+        "role": "neutral",
+        "displayName": "Cool Paper",
+        "canonical": "#fafbfc",
+        "dark": "#131417",
+        "tonalRamp": [
+          "#646465",
+          "#787879",
+          "#8c8d8d",
+          "#a0a1a1",
+          "#fbfcfd",
+          "#fbfcfd",
+          "#fcfcfd",
+          "#fcfdfd"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Page Surface",
+        "canonical": "#ffffff",
+        "dark": "#18191d",
+        "tonalRamp": [
+          "#666666",
+          "#7a7a7a",
+          "#8f8f8f",
+          "#a3a3a3",
+          "#ffffff",
+          "#ffffff",
+          "#ffffff",
+          "#ffffff"
+        ]
+      },
+      "sunken": {
+        "role": "neutral",
+        "displayName": "Sunken Tone",
+        "canonical": "#f1f3f6",
+        "dark": "#1e2024",
+        "tonalRamp": [
+          "#606162",
+          "#747576",
+          "#87888a",
+          "#9a9c9d",
+          "#f4f5f8",
+          "#f5f6f8",
+          "#f6f7f9",
+          "#f7f8fa"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Pale Rule",
+        "canonical": "#dfe5ec",
+        "dark": "#2a2d33",
+        "tonalRamp": [
+          "#595c5e",
+          "#6b6e71",
+          "#7d8084",
+          "#8f9397",
+          "#e5eaef",
+          "#e7ecf1",
+          "#eaeef2",
+          "#ecf0f4"
+        ]
+      },
+      "rule-strong": {
+        "role": "neutral",
+        "displayName": "Strong Rule",
+        "canonical": "#c5cdd7",
+        "dark": "#3a3e46",
+        "tonalRamp": [
+          "#4f5256",
+          "#5f6267",
+          "#6e7378",
+          "#7e838a",
+          "#cfd6de",
+          "#d4dae1",
+          "#d9dee5",
+          "#dde2e8"
+        ]
+      },
+      "ink": {
+        "role": "primary",
+        "displayName": "Iron Ink",
+        "canonical": "#16171b",
+        "dark": "#e8e8e5",
+        "tonalRamp": [
+          "#09090b",
+          "#0b0b0d",
+          "#0c0d0f",
+          "#0e0f11",
+          "#404144",
+          "#535356",
+          "#656669",
+          "#78787b"
+        ]
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Second Ink",
+        "canonical": "#4f545c",
+        "dark": "#a3a8b1",
+        "tonalRamp": [
+          "#202225",
+          "#26282c",
+          "#2c2f34",
+          "#33363b",
+          "#6f7379",
+          "#7d8086",
+          "#8b8e93",
+          "#999ca0"
+        ]
+      },
+      "ink-3": {
+        "role": "neutral",
+        "displayName": "Third Ink",
+        "canonical": "#6a707a",
+        "dark": "#868c96",
+        "tonalRamp": [
+          "#2a2d31",
+          "#33363b",
+          "#3b3f44",
+          "#44484e",
+          "#858a92",
+          "#91959d",
+          "#9da1a7",
+          "#a9acb2"
+        ]
+      },
+      "red-pen": {
+        "role": "secondary",
+        "displayName": "Red Pen (mentor)",
+        "canonical": "#c8352a",
+        "dark": "#f07466",
+        "tonalRamp": [
+          "#501511",
+          "#601914",
+          "#701e18",
+          "#80221b",
+          "#d25950",
+          "#d66a61",
+          "#db7a72",
+          "#df8a83"
+        ]
+      },
+      "ballpoint": {
+        "role": "tertiary",
+        "displayName": "Ballpoint Blue (student)",
+        "canonical": "#2a5ba6",
+        "dark": "#8fb4ee",
+        "tonalRamp": [
+          "#112442",
+          "#142c50",
+          "#18335d",
+          "#1b3a6a",
+          "#5079b6",
+          "#6186bd",
+          "#7293c4",
+          "#83a0cb"
+        ]
+      },
+      "ballpoint-wash": {
+        "role": "tertiary",
+        "displayName": "Ballpoint Wash",
+        "canonical": "#edf2f9",
+        "dark": "#edf2f9",
+        "tonalRamp": [
+          "#5f6164",
+          "#727478",
+          "#85888b",
+          "#989b9f",
+          "#f0f4fa",
+          "#f2f5fb",
+          "#f3f6fb",
+          "#f5f7fc"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Home h1 only, Source Serif / Song."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section and report headings."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Step, layer and question titles."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "System CJK sans UI copy."
+      },
+      "mentor-hand": {
+        "displayName": "Mentor Hand",
+        "purpose": "Kai, mentor words only."
+      },
+      "student-writing": {
+        "displayName": "Student Writing",
+        "purpose": "Sans on 28px rules, ballpoint blue."
+      },
+      "code": {
+        "displayName": "Code",
+        "purpose": "JetBrains Mono, ink-only highlighting."
+      },
+      "label": {
+        "displayName": "Apparatus",
+        "purpose": "Small-caps Latin labels."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "mark-in",
+        "value": "700ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Cited-line red wash fades in."
+      },
+      {
+        "name": "rise",
+        "value": "400ms cubic-bezier(0.16, 1, 0.3, 1), y 8px",
+        "purpose": "Demo spread entrances."
+      },
+      {
+        "name": "thinking",
+        "value": "1.2s ease-in-out infinite, 160ms stagger",
+        "purpose": "Three red squares pulse while the mentor reads."
+      },
+      {
+        "name": "indeterminate",
+        "value": "1.6s cubic-bezier(0.4, 0, 0.2, 1) infinite",
+        "purpose": "Red segment sliding on a 1px rule while waiting."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "1ms durations, scroll auto",
+        "purpose": "prefers-reduced-motion clamp."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Solid ink rectangle, the one primary action per view.",
+      "html": "<button class=\"ds-btn-primary\">开始练习</button>",
+      "css": ":host{--paper:#fafbfc;--surface:#fff;--sunken:#f1f3f6;--rule:#dfe5ec;--rule-strong:#c5cdd7;--ink:#16171b;--ink-2:#4f545c;--ink-3:#6a707a;--pen:#c8352a;--pen-wash:rgb(200 53 42/.055);--ballpoint:#2a5ba6;--ballpoint-wash:#edf2f9}.ds-btn-primary{background:var(--ink);color:var(--paper);height:44px;padding:0 24px;border:0;border-radius:0;font:500 15px -apple-system,'PingFang SC',sans-serif;transition:opacity .15s}.ds-btn-primary:hover{opacity:.9}.ds-btn-primary:focus-visible{outline:2px solid var(--ballpoint);outline-offset:2px}.ds-btn-primary:disabled{background:var(--paper);color:var(--ink-2);border:1px solid var(--rule-strong)}"
+    },
+    {
+      "name": "Text Action",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Secondary actions: underlined text with a strong-rule underline.",
+      "html": "<button class=\"ds-text-action\">给我提示</button>",
+      "css": ":host{--paper:#fafbfc;--surface:#fff;--sunken:#f1f3f6;--rule:#dfe5ec;--rule-strong:#c5cdd7;--ink:#16171b;--ink-2:#4f545c;--ink-3:#6a707a;--pen:#c8352a;--pen-wash:rgb(200 53 42/.055);--ballpoint:#2a5ba6;--ballpoint-wash:#edf2f9}.ds-text-action{background:none;border:0;height:36px;padding:0 8px;color:var(--ink-2);font:14px -apple-system,'PingFang SC',sans-serif;text-decoration:underline;text-decoration-color:var(--rule-strong);text-underline-offset:6px}.ds-text-action:hover{color:var(--ink);text-decoration-color:var(--ink)}.ds-text-action:focus-visible{outline:2px solid var(--ballpoint);outline-offset:2px}"
+    },
+    {
+      "name": "Repo Field",
+      "kind": "input",
+      "refersTo": "button-primary",
+      "description": "Underlined field: ink rule, ballpoint on focus.",
+      "html": "<div class=\"ds-field\"><input placeholder=\"https://github.com/owner/repo\"></div>",
+      "css": ":host{--paper:#fafbfc;--surface:#fff;--sunken:#f1f3f6;--rule:#dfe5ec;--rule-strong:#c5cdd7;--ink:#16171b;--ink-2:#4f545c;--ink-3:#6a707a;--pen:#c8352a;--pen-wash:rgb(200 53 42/.055);--ballpoint:#2a5ba6;--ballpoint-wash:#edf2f9}.ds-field{border-bottom:1px solid var(--ink);padding-bottom:4px;width:320px}.ds-field:focus-within{border-color:var(--ballpoint)}.ds-field input{width:100%;border:0;outline:0;background:transparent;color:var(--ink);font:16px -apple-system,sans-serif}.ds-field input::placeholder{color:var(--ink-3)}"
+    },
+    {
+      "name": "Segmented Choice",
+      "kind": "chip",
+      "refersTo": "segmented-checked",
+      "description": "Ruled row of the student's choices; checked cell in ballpoint wash.",
+      "html": "<div class=\"ds-seg\"><button>简单</button><button class=\"on\">困难</button><button>刁钻</button></div>",
+      "css": ":host{--paper:#fafbfc;--surface:#fff;--sunken:#f1f3f6;--rule:#dfe5ec;--rule-strong:#c5cdd7;--ink:#16171b;--ink-2:#4f545c;--ink-3:#6a707a;--pen:#c8352a;--pen-wash:rgb(200 53 42/.055);--ballpoint:#2a5ba6;--ballpoint-wash:#edf2f9}.ds-seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;border:1px solid var(--rule-strong);width:300px}.ds-seg button{height:44px;border:0;border-left:1px solid var(--rule-strong);background:transparent;color:var(--ink-2);font:14.5px -apple-system,'PingFang SC',sans-serif}.ds-seg button:first-child{border-left:0}.ds-seg button:hover{background:var(--sunken);color:var(--ink)}.ds-seg button.on{background:var(--ballpoint-wash);color:var(--ballpoint);outline:1px solid var(--ballpoint);outline-offset:-1px}"
+    },
+    {
+      "name": "Citation Chip",
+      "kind": "chip",
+      "refersTo": "citation-chip",
+      "description": "File and line range in red pen brackets.",
+      "html": "<a class=\"ds-chip\" href=\"#\"><span class=\"b\">[</span><span class=\"f\">Coordinator.swift</span><span class=\"r\">· 第 273–301 行</span><span class=\"b\">]</span></a>",
+      "css": ":host{--paper:#fafbfc;--surface:#fff;--sunken:#f1f3f6;--rule:#dfe5ec;--rule-strong:#c5cdd7;--ink:#16171b;--ink-2:#4f545c;--ink-3:#6a707a;--pen:#c8352a;--pen-wash:rgb(200 53 42/.055);--ballpoint:#2a5ba6;--ballpoint-wash:#edf2f9}.ds-chip{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 4px;text-decoration:none}.ds-chip:hover{background:var(--pen-wash)}.ds-chip .b{color:var(--pen)}.ds-chip .f{font:12.5px 'JetBrains Mono',ui-monospace,monospace;color:var(--ink)}.ds-chip .r{font:13px -apple-system,'PingFang SC',sans-serif;color:var(--ink-2)}"
+    },
+    {
+      "name": "Rail Key and Ref",
+      "kind": "custom",
+      "refersTo": "rail-key",
+      "description": "Centre-rail keys (hollow, filled) and the circled reference number.",
+      "html": "<div class=\"ds-keys\"><span class=\"k\">Q3</span><span class=\"k f\">Q3</span><span class=\"ref\">1</span></div>",
+      "css": ":host{--paper:#fafbfc;--surface:#fff;--sunken:#f1f3f6;--rule:#dfe5ec;--rule-strong:#c5cdd7;--ink:#16171b;--ink-2:#4f545c;--ink-3:#6a707a;--pen:#c8352a;--pen-wash:rgb(200 53 42/.055);--ballpoint:#2a5ba6;--ballpoint-wash:#edf2f9}.ds-keys{display:flex;gap:12px;align-items:center;background:var(--surface);padding:12px}.ds-keys .k{border:1px solid var(--pen);background:var(--surface);color:var(--pen);padding:0 4px;font:11px/16px -apple-system,sans-serif}.ds-keys .k.f{background:var(--pen);color:var(--paper)}.ds-keys .ref{display:inline-flex;width:16px;height:16px;align-items:center;justify-content:center;border:1px solid var(--pen);border-radius:50%;color:var(--pen);font:600 10px/1 -apple-system,sans-serif}"
+    },
+    {
+      "name": "Turn Pair",
+      "kind": "custom",
+      "refersTo": "student-writing",
+      "description": "Mentor follow-up in red Kai, student answer in blue on 28px rules; no bubbles.",
+      "html": "<div class=\"ds-turn\"><div class=\"l pen\">教练</div><p class=\"m\">这一行为什么要先判断是否为空?</p><div class=\"l\">你的回答</div><p class=\"s\">因为空的时候后面会报错,所以先拦住。</p></div>",
+      "css": ":host{--paper:#fafbfc;--surface:#fff;--sunken:#f1f3f6;--rule:#dfe5ec;--rule-strong:#c5cdd7;--ink:#16171b;--ink-2:#4f545c;--ink-3:#6a707a;--pen:#c8352a;--pen-wash:rgb(200 53 42/.055);--ballpoint:#2a5ba6;--ballpoint-wash:#edf2f9}.ds-turn{width:340px;display:flex;flex-direction:column;gap:6px}.ds-turn .l{font:13px -apple-system,'PingFang SC',sans-serif;color:var(--ink-2)}.ds-turn .l.pen{color:var(--pen)}.ds-turn p{margin:0}.ds-turn .m{font:17px/1.75 'Kaiti SC',STKaiti,KaiTi,serif;color:var(--pen)}.ds-turn .s{font:15.5px/28px -apple-system,'PingFang SC',sans-serif;color:var(--ballpoint);background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 27px,var(--rule) 27px,var(--rule) 28px)}"
+    },
+    {
+      "name": "Pen Marks and Detents",
+      "kind": "custom",
+      "refersTo": "rail-key",
+      "description": "Red-pen tick and cross strokes, and five square score detents.",
+      "html": "<div class=\"ds-marks\"><svg viewBox=\"0 0 20 20\" width=\"18\" height=\"18\"><path d=\"M3.5 10.5 7.6 14.2 16.5 4.8\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.9\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg><svg viewBox=\"0 0 20 20\" width=\"18\" height=\"18\"><path d=\"M4.5 4.5 15.5 15.5 M15.5 4.5 4.5 15.5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.9\" stroke-linecap=\"round\"/></svg><span class=\"d\"><i class=\"f\"></i><i class=\"f\"></i><i class=\"f\"></i><i></i><i></i></span></div>",
+      "css": ":host{--paper:#fafbfc;--surface:#fff;--sunken:#f1f3f6;--rule:#dfe5ec;--rule-strong:#c5cdd7;--ink:#16171b;--ink-2:#4f545c;--ink-3:#6a707a;--pen:#c8352a;--pen-wash:rgb(200 53 42/.055);--ballpoint:#2a5ba6;--ballpoint-wash:#edf2f9}.ds-marks{display:flex;gap:14px;align-items:center;color:var(--pen)}.ds-marks .d{display:flex;gap:3px}.ds-marks i{width:11px;height:11px;border:1px solid var(--ink);display:block}.ds-marks i.f{background:var(--ink)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Marked Exercise Book",
+    "overview": "Every question is pinned to the student's own lines the way a teacher's red pen marks an exercise book, set like a reference edition: code and conversation as twin columns around a centre rail of keys. Cool paper white, iron ink, one red pen, one ballpoint blue, pale rule-blue hairlines. 1px rules, square detents, no radius, no shadows.",
+    "keyCharacteristics": [
+      "Red pen = mentor only; ballpoint blue = student only",
+      "Ink-filled primary actions, ruled text for everything else",
+      "Marks are shapes (tick, half tick, cross, dash, brackets, circled refs), never colour alone",
+      "Zero radius; the circled reference number is the only circle",
+      "Flat: rules and tone instead of shadows"
+    ],
+    "rules": [
+      {
+        "name": "The Two Pens Rule",
+        "body": "Red appears only where the mentor wrote or marked; blue only where the student wrote or chose. Code syntax, charts of student data, tags and buttons never borrow either.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ink Primary Rule",
+        "body": "The one primary action per view is a solid ink rectangle with paper text. Red is never a button fill.",
+        "section": "colors"
+      },
+      {
+        "name": "The No-Gradient Rule",
+        "body": "Flat fills only; the only translucency is the two washes.",
+        "section": "colors"
+      },
+      {
+        "name": "The Hand Rule",
+        "body": "Kai is for mentor words only; the student's words are always sans in blue.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Rule",
+        "body": "Numbers in gutters, keys, counts and scores use tabular figures.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Page Rule",
+        "body": "Do not add shadows, glows, blur or lift on hover. Separate with a 1px rule or a tone.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do write mentor words in Kai red and student words in sans blue; nothing else uses those colours.",
+      "Do use ink-filled rectangles for the primary action and underlined text for the rest.",
+      "Do separate with 1px rules, set small numbers in tabular Source Serif or sans, and pair every mark with a label.",
+      "Do keep corners at 0 and add new detents as squares."
+    ],
+    "donts": [
+      "Don't use chat bubbles, avatars, or an editor-beside-chat layout; turns are label then text.",
+      "Don't reintroduce cream, tangerine, rounded pills, soft shadows, glass, gradients, or emoji icons.",
+      "Don't use the three-up icon-card grid, big-number stat tiles, hero gradients, or eyebrow kickers above headings.",
+      "Don't use red for buttons, success/warning semantics, or syntax colours; don't use blue for links or decoration.",
+      "Don't colour code tokens; weight and two greys carry structure.",
+      "Don't encode meaning in colour alone."
+    ]
+  }
+}

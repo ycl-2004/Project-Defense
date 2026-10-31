@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/logo.svg" alt="Project Defense logo: a speech bubble holding code brackets" width="96" height="96">
+  <img src="docs/logo.svg" alt="Project Defense logo: a square red seal holding the character 答" width="96" height="96">
 </p>
 
 <h1 align="center">Project Defense · 答辩教练</h1>
@@ -84,7 +84,7 @@ Open <http://localhost:3000>, paste a public repository link, or press **No proj
 **The session**
 - Difficulty: **Easy** (what the code does), **Hard** (why it is built this way), **Tricky** (counterfactuals, edge cases, change requests).
 - Five to eight main questions across five layers: explain the feature → understand the code → understand decisions → handle failure → apply it.
-- Code beside the conversation: the full file, cited lines highlighted and scrolled into view; follow-ups that cite other lines move the panel with them.
+- Code beside the conversation: the full file with the cited range bracketed on a centre rail, the lines a question names underlined in red and circled ①②, and the mentor's short margin note beside its line. Follow-ups that cite other lines move the panel with them.
 - Hints (up to three per question), skip, and a retry path that keeps a typed answer if the network fails.
 
 **The report**
@@ -113,7 +113,7 @@ flowchart LR
 ```
 
 1. **Analyse.** Three GitHub API calls (repository, commit, tree) plus the README. The model returns an overview and the Parts; file paths it names are checked against the tree.
-2. **Plan.** The Part's files (at most 40 files, 300 KB) are sent with line numbers. The model writes one question per layer slot and cites lines. Each citation is checked against the real file; if any is wrong the model is told exactly what failed and asked again, up to three attempts.
+2. **Plan.** The Part's files (at most 40 files, 300 KB) are sent with line numbers. The model writes one question per layer slot, cites lines, and adds a margin note of a few words pinned to one of them. Each citation is checked against the real file; if any is wrong the model is told exactly what failed and asked again, up to three attempts.
 3. **Turn.** After each answer the model decides between a follow-up and the next question. Thinking mode is off here, so a turn takes a few seconds.
 4. **Report.** The model rates every question. Questions the student skipped are rated *unanswered* by rule, and the radar is computed from the ratings (clear 5, partial 3, misconception 2, unanswered 1), so the same answers always draw the same chart.
 
@@ -135,11 +135,11 @@ Design decisions are recorded in [`docs/decisions/`](docs/decisions/), and the v
 
 | Home | Pick a part |
 | --- | --- |
-| ![Home page with the repository link field and a replay of one question, answer and follow-up](docs/screenshots/home.png) | ![Setup page with the project overview, Parts, difficulty and question count](docs/screenshots/setup.png) |
+| ![Home page as an open exercise book: the title and the repository line on top, a code excerpt with red-pen marks beside a replayed question, answer and follow-up](docs/screenshots/home.png) | ![Setup page with the project overview, the Part's file index, Parts, difficulty and question count](docs/screenshots/setup.png) |
 | **Session** | **Session, dark** |
-| ![Session with the cited code on the left and a follow-up and hint on the right](docs/screenshots/interview.png) | ![The same workspace in the dark theme](docs/screenshots/interview-dark.png) |
+| ![Session: the cited lines bracketed on the centre rail with a red margin note; the student's answer in blue on ruled lines, the follow-up in the mentor's red hand](docs/screenshots/interview.png) | ![The same workspace in the dark theme](docs/screenshots/interview-dark.png) |
 | **Report** | **English interface** |
-| ![Report with summary, rating strip and five-layer radar](docs/screenshots/report.png) | ![Home page in English](docs/screenshots/home-en.png) |
+| ![Report as a corrected paper: the mentor's summary in red, a mark per question and the five-layer radar](docs/screenshots/report.png) | ![Home page in English](docs/screenshots/home-en.png) |
 
 Captured with Playwright at 1440 × 900 from the local server on 2026-10-30. The session and report show real `deepseek-flash` output for this repository.
 

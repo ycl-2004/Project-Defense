@@ -4,7 +4,7 @@ import { RadioGroup as RadioGroupPrimitive } from "radix-ui";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-/** A row of mutually exclusive options. Arrow keys move between them (Radix radio group). */
+/** A ruled row of the student's choices: the chosen one is marked in their blue. Arrow keys move between options. */
 export function Segmented<T extends string>({
   value,
   onChange,
@@ -24,13 +24,13 @@ export function Segmented<T extends string>({
       onValueChange={(next) => onChange(next as T)}
       aria-label={label}
       orientation="horizontal"
-      className={cn("grid auto-cols-fr grid-flow-col gap-1 rounded-2xl bg-sunken p-1", className)}
+      className={cn("grid auto-cols-fr grid-flow-col border border-rule-strong", className)}
     >
       {options.map((option) => (
         <RadioGroupPrimitive.Item
           key={option.value}
           value={option.value}
-          className="flex h-11 items-center justify-center gap-2 rounded-xl px-3 text-[14.5px] font-medium text-ink-2 transition-[background-color,color,box-shadow] duration-150 hover:text-ink data-[state=checked]:bg-surface data-[state=checked]:text-ink data-[state=checked]:shadow-card"
+          className="flex h-11 items-center justify-center gap-2 border-l border-rule-strong px-3 text-[14.5px] text-ink-2 transition-colors first:border-l-0 hover:bg-sunken hover:text-ink data-[state=checked]:bg-ballpoint-wash data-[state=checked]:text-ballpoint data-[state=checked]:outline data-[state=checked]:outline-1 data-[state=checked]:-outline-offset-1 data-[state=checked]:outline-ballpoint"
         >
           {option.label}
         </RadioGroupPrimitive.Item>

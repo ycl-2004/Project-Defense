@@ -1,32 +1,60 @@
 "use client";
 
 import { usePrefs } from "@/components/providers";
-import type { PlannedQuestion } from "@/lib/domain";
+import { LIMITS } from "@/lib/config";
+import type { PlannedQuestion, Thread } from "@/lib/domain";
+import { followUpsUsed } from "@/lib/interview/machine";
 import { cn } from "@/lib/utils";
 
-/** One segment per main question: done, current, upcoming. */
-export function InterviewProgress({ plan, index, finished }: { plan: PlannedQuestion[]; index: number; finished: boolean }) {
+/**
+ * The question index as square detents, drawn complete from the first question: answered is
+ * filled ink, the current one is filled red, the rest are hairline. Pips under each show follow-ups used.
+ */
+export function InterviewProgress({
+  plan,
+  threads,
+  index,
+  finished,
+}: {
+  plan: PlannedQuestion[];
+  threads: Thread[];
+  index: number;
+  finished: boolean;
+}) {
   const { t, f } = usePrefs();
-  const current = plan[Math.min(index, plan.length - 1)];
+  const current = Math.min(index, plan.length - 1);
   return (
-    <div className="flex min-w-0 flex-col gap-1.5">
-      <div className="flex items-baseline gap-2 text-[13px]">
-        <span className="tabular font-medium text-ink">
-          {f(t.interview.progress, { current: Math.min(index + 1, plan.length), total: plan.length })}
-        </span>
-        {!finished && current && <span className="truncate text-ink-3">· {t.layer[current.layer].name}</span>}
-      </div>
-      <div className="flex gap-1" role="progressbar" aria-valuemin={0} aria-valuemax={plan.length} aria-valuenow={finished ? plan.length : index}>
-        {plan.map((question, position) => (
-          <span
-            key={question.id}
-            className={cn(
-              "h-1.5 w-6 rounded-full transition-colors duration-300 sm:w-9",
-              finished || position < index ? "bg-brand" : position === index ? "bg-brand/45" : "bg-line-strong",
-            )}
-          />
-        ))}
-      </div>
-    </div>
+    <nav aria-label={f(t.interview.progress, { current: current + 1, total: plan.length })} className="flex items-center gap-3">
+      <ol className="flex items-start gap-1.5">
+        {plan.map((question, position) => {
+          const done = finished || position < index;
+          const isCurrent = !finished && position === index;
+          const thread = threads.find((item) => item.questionId === question.id);
+          const used = thread ? followUpsUsed(thread) : 0;
+          return (
+            <li key={question.id} className="flex flex-col items-center gap-[3px]" aria-current={isCurrent ? "step" : undefined}>
+              <span
+                className={cn(
+                  "grid size-[22px] place-items-center border font-serif text-[12px] tabular",
+                  done && "border-ink bg-ink text-paper",
+                  isCurrent && "border-pen bg-pen text-paper",
+                  !done && !isCurrent && "border-rule-strong text-ink-3",
+                )}
+              >
+                {position + 1}
+              </span>
+              <span className="flex gap-[2px]" aria-hidden>
+                {Array.from({ length: LIMITS.maxFollowUps }, (_, pip) => (
+                  <span key={pip} className={cn("size-[4px]", pip < used ? (isCurrent ? "bg-pen" : "bg-ink") : "bg-rule-strong")} />
+                ))}
+              </span>
+            </li>
+          );
+        })}
+      </ol>
+      {!finished && plan[current] && (
+        <span className="hidden text-[13px] text-ink-2 xl:inline">{t.layer[plan[current].layer].name}</span>
+      )}
+    </nav>
   );
 }

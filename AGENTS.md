@@ -32,6 +32,6 @@ Students paste a public GitHub repository; a DeepSeek-backed coach asks 5–8 la
 - The follow-up cap and "skipped means unanswered" are enforced on the server, not only in the browser.
 - Prompts: rules only in `SYSTEM_PROMPT`; repository text and answers fenced as data; keep the system prompt identical across calls and the code bundle first, so DeepSeek's prefix cache hits.
 - Next.js 16 specifics: the root layout reads cookies and exports `instant = false`; route handlers may export `maxDuration` but not `runtime` or `dynamic`; pages stay mounted when hidden, so API calls start from user actions, not effects.
-- UI: colours are tokens in `src/app/globals.css` (`light-dark()`); no italics; no coloured side bars on cards or selected items; Chinese uses the system font stack with weights 400/500/600; status colours always come with an icon and a label.
+- UI: follow `DESIGN.md`. Colours are tokens in `src/app/globals.css` (`light-dark()`); red pen is the mentor's only, ballpoint blue the student's only; corners are square and there are no shadows or gradients; no italics; no coloured side bars on cards or selected items; Chinese uses the system Song / Kai / sans stacks with weights 400/500/600; every mark pairs a shape with a text label.
 - Tests: shared behaviour is tested once in `tests/` with the fakes in `tests/fakes.ts`; e2e mocks `/api/**` and `raw.githubusercontent.com`.
 - Secrets live only in `.env.local` or the Vercel dashboard. Commit with a clear subject line and the co-author trailer used in history.

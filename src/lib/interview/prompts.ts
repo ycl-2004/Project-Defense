@@ -161,6 +161,7 @@ export const planOutputSchema = z.object({
         question: z.string().min(1),
         focus: z.string().min(1),
         citation: citationSchema,
+        note: z.object({ line: z.number().int().positive(), text: z.string() }).nullable().optional(),
       }),
     )
     .min(1),
@@ -190,10 +191,11 @@ Write the ${input.layers.length} main questions. Each question must:
 - be a single clear question of at most two sentences, not a list;
 - build on the previous ones, from understanding the feature towards applying it.
 "focus" is one short sentence for the mentor: which understanding the question checks.
+"note" is the mentor's margin note in red pen beside one line inside the citation: at most 12 Chinese characters or 6 English words, a nudge that points attention without giving the answer (for example "nil 时呢？" or "why here?"), with the line it sits beside.
 ${languageRule(input.locale)}
 
 Reply with json in exactly this shape (one item per slot, same order):
-{"questions": [{"layer": "explain", "question": "…", "focus": "…", "citation": {"path": "src/lib/extract.ts", "startLine": 12, "endLine": 30}}]}`;
+{"questions": [{"layer": "explain", "question": "…", "focus": "…", "citation": {"path": "src/lib/extract.ts", "startLine": 12, "endLine": 30}, "note": {"line": 18, "text": "…"}}]}`;
 }
 
 // ---------- 4. Follow up or move on ----------

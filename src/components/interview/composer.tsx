@@ -1,11 +1,13 @@
 "use client";
 
-import { ArrowUp, Lightbulb, LoaderCircle, SkipForward } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 import { usePrefs } from "@/components/providers";
-import { Button } from "@/components/ui/button";
 import { LIMITS } from "@/lib/config";
 import { cn } from "@/lib/utils";
 
+const LINE = 28;
+
+/** A ruled writing field: the student's words go down in ballpoint blue on the book's rules. */
 export function Composer({
   value,
   onChange,
@@ -30,14 +32,17 @@ export function Composer({
 
   return (
     <form
-      className="rounded-3xl border border-line-strong bg-surface p-2 shadow-card transition-[border-color,box-shadow] duration-200 focus-within:border-brand focus-within:ring-4 focus-within:ring-brand-soft"
+      className="flex flex-col gap-3"
       onSubmit={(event) => {
         event.preventDefault();
         if (ready) onSend();
       }}
     >
-      <label htmlFor="answer" className="sr-only">
-        {t.interview.answerLabel}
+      <label htmlFor="answer" className="flex items-baseline justify-between text-[13px] text-ink-2">
+        <span className="font-medium">{t.interview.answerLabel}</span>
+        {value.length > LIMITS.maxAnswerChars * 0.8 && (
+          <span className="tabular">{f(t.interview.charCount, { count: value.length, max: LIMITS.maxAnswerChars })}</span>
+        )}
       </label>
       <textarea
         id="answer"
@@ -52,40 +57,43 @@ export function Composer({
         placeholder={compact ? t.interview.answerPlaceholderMobile : t.interview.answerPlaceholder}
         disabled={busy === "turn"}
         rows={compact ? 2 : 3}
-        className="block max-h-[36vh] min-h-[72px] w-full resize-none bg-transparent px-3 py-2.5 text-[15.5px] leading-[1.65] text-ink outline-none [field-sizing:content] placeholder:text-ink-3 disabled:opacity-60"
+        className="block max-h-[34vh] w-full resize-none border-y border-rule-strong bg-surface px-1 text-[16px] text-ballpoint outline-none transition-colors [field-sizing:content] focus:border-ballpoint disabled:opacity-60"
+        style={{
+          lineHeight: `${LINE}px`,
+          minHeight: LINE * (compact ? 2 : 3) + 2,
+          backgroundImage: `repeating-linear-gradient(to bottom, transparent 0, transparent ${LINE - 1}px, var(--rule) ${LINE - 1}px, var(--rule) ${LINE}px)`,
+          backgroundAttachment: "local",
+        }}
       />
-      <div className="flex items-center gap-1 px-1 pt-1">
-        <Button
+      <div className="flex items-center gap-1">
+        <button
           type="button"
-          variant="ghost"
-          size="sm"
           onClick={onHint}
           disabled={!canHint || !!busy}
-          className="h-9 gap-1.5 rounded-xl px-2.5 text-[13.5px] text-ink-2 hover:text-ink"
+          className="inline-flex h-9 items-center gap-1.5 px-2 text-[14px] text-ink-2 underline decoration-rule-strong underline-offset-[6px] transition-colors hover:text-ink hover:decoration-ink disabled:opacity-40"
         >
-          {busy === "hint" ? <LoaderCircle className="size-4 animate-spin" /> : <Lightbulb className="size-4" />}
-          <span className={cn(compact && "sr-only sm:not-sr-only")}>{t.interview.hint}</span>
-        </Button>
-        <Button
+          {busy === "hint" && <LoaderCircle className="size-4 animate-spin" strokeWidth={1.5} />}
+          {t.interview.hint}
+        </button>
+        <button
           type="button"
-          variant="ghost"
-          size="sm"
           onClick={onSkip}
           disabled={!!busy}
-          className="h-9 gap-1.5 rounded-xl px-2.5 text-[13.5px] text-ink-2 hover:text-ink"
+          className={cn(
+            "inline-flex h-9 items-center px-2 text-[14px] text-ink-2 underline decoration-rule-strong underline-offset-[6px] transition-colors hover:text-ink hover:decoration-ink disabled:opacity-40",
+          )}
         >
-          <SkipForward className="size-4" />
-          <span className={cn(compact && "sr-only sm:not-sr-only")}>{t.interview.skip}</span>
-        </Button>
-        <span className="ml-auto hidden text-[12px] text-ink-3 tabular md:inline">
-          {value.length > LIMITS.maxAnswerChars * 0.8
-            ? f(t.interview.charCount, { count: value.length, max: LIMITS.maxAnswerChars })
-            : t.interview.sendShortcut}
-        </span>
-        <Button type="submit" disabled={!ready} className="ml-auto h-10 gap-1.5 rounded-xl px-4 text-[14.5px] hover:bg-brand-strong md:ml-2">
-          {busy === "turn" ? <LoaderCircle className="size-4 animate-spin" /> : <ArrowUp className="size-4" />}
+          {t.interview.skip}
+        </button>
+        <span className="ml-auto hidden pr-3 text-[13px] text-ink-3 md:inline">{t.interview.sendShortcut}</span>
+        <button
+          type="submit"
+          disabled={!ready}
+          className="ml-auto inline-flex h-10 items-center gap-2 bg-ink px-5 text-[14.5px] font-medium text-paper transition-opacity hover:opacity-90 disabled:border disabled:border-rule-strong disabled:bg-paper disabled:text-ink-2 md:ml-0"
+        >
+          {busy === "turn" && <LoaderCircle className="size-4 animate-spin" strokeWidth={1.5} />}
           {t.interview.send}
-        </Button>
+        </button>
       </div>
     </form>
   );

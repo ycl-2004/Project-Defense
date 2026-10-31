@@ -1,45 +1,41 @@
 "use client";
 
 import { usePrefs } from "@/components/providers";
-import { RATING_STYLE } from "@/components/shared/tags";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { PenMark } from "@/components/shared/marks";
 import { RATINGS, type Rating } from "@/lib/domain";
 import { cn } from "@/lib/utils";
 
-/** One segment per question, in interview order, plus a legend with icon, label and count. */
+/** The teacher's marks down the margin: one square per question in order, then a legend with mark, label and count. */
 export function RatingStrip({ ratings, className }: { ratings: Rating[]; className?: string }) {
   const { t, f } = usePrefs();
   const counts = Object.fromEntries(RATINGS.map((rating) => [rating, ratings.filter((item) => item === rating).length]));
 
   return (
     <div className={cn("flex flex-col gap-4", className)}>
-      <div className="flex h-3 gap-[2px]" role="img" aria-label={ratings.map((rating, index) => `${index + 1}: ${t.rating[rating]}`).join(", ")}>
+      <ol className="flex flex-wrap gap-2" aria-label={t.report.ratings}>
         {ratings.map((rating, index) => (
-          <Tooltip key={index}>
-            <TooltipTrigger asChild>
-              <span
-                tabIndex={0}
-                className={cn("h-full flex-1 rounded-[4px] outline-offset-2", RATING_STYLE[rating].mark)}
-                aria-label={`${f(t.interview.progress, { current: index + 1, total: ratings.length })} · ${t.rating[rating]}`}
-              />
-            </TooltipTrigger>
-            <TooltipContent>
-              {f(t.interview.progress, { current: index + 1, total: ratings.length })} · {t.rating[rating]}
-            </TooltipContent>
-          </Tooltip>
+          <li
+            key={index}
+            className="flex w-11 flex-col items-center gap-1"
+            aria-label={`${f(t.interview.progress, { current: index + 1, total: ratings.length })} · ${t.rating[rating]}`}
+          >
+            <span className="grid size-11 place-items-center border border-rule-strong">
+              <PenMark rating={rating} className="size-6" />
+            </span>
+            <span className="tabular text-[12px] text-ink-3" aria-hidden>
+              {index + 1}
+            </span>
+          </li>
         ))}
-      </div>
+      </ol>
       <ul className="flex flex-wrap gap-x-5 gap-y-2">
-        {RATINGS.map((rating) => {
-          const Icon = RATING_STYLE[rating].icon;
-          return (
-            <li key={rating} className="flex items-center gap-1.5 text-[13px] text-ink-2">
-              <Icon className={cn("size-3.5", RATING_STYLE[rating].text)} strokeWidth={2.25} aria-hidden />
-              {t.rating[rating]}
-              <span className="tabular font-medium text-ink">{counts[rating]}</span>
-            </li>
-          );
-        })}
+        {RATINGS.map((rating) => (
+          <li key={rating} className="flex items-center gap-1.5 text-[13px] text-ink-2">
+            <PenMark rating={rating} className="size-4" />
+            {t.rating[rating]}
+            <span className="tabular font-medium text-ink">{counts[rating]}</span>
+          </li>
+        ))}
       </ul>
     </div>
   );

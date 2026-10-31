@@ -1,11 +1,15 @@
 "use client";
 
-import { ArrowUpRight, FileCode2 } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { usePrefs } from "@/components/providers";
 import type { Citation } from "@/lib/domain";
 import { cn } from "@/lib/utils";
 
-/** "src/app/page.tsx · lines 12–30". Clicking it brings the code panel to those lines. */
+function baseName(path: string) {
+  return path.slice(path.lastIndexOf("/") + 1);
+}
+
+/** "[ DictationCoordinator.swift · 第 273–301 行 ]" in red pen brackets. Clicking it brings the code to those lines. */
 export function CitationChip({
   citation,
   href,
@@ -24,27 +28,36 @@ export function CitationChip({
       : f(t.common.lines, { start: citation.startLine, end: citation.endLine });
   const body = (
     <>
-      <FileCode2 className="size-3.5 shrink-0 text-brand" aria-hidden />
-      <span className="min-w-0 truncate font-mono text-[12px] text-ink">{citation.path}</span>
-      <span className="shrink-0 text-[12px] text-ink-3">· {range}</span>
-      {href && <ArrowUpRight className="size-3.5 shrink-0 text-ink-3" aria-hidden />}
+      <span className="text-pen" aria-hidden>
+        [
+      </span>
+      <span className="min-w-0 truncate font-mono text-[12.5px] text-ink" title={citation.path}>
+        {baseName(citation.path)}
+      </span>
+      <span className="shrink-0 text-[13px] text-ink-2 tabular">· {range}</span>
+      <span className="text-pen" aria-hidden>
+        ]
+      </span>
+      {href && <ArrowUpRight className="size-3.5 shrink-0 text-ink-3" strokeWidth={1.5} aria-hidden />}
     </>
   );
+  // The visible chip shows the file name; assistive tech gets the full path.
+  const label = `${citation.path} · ${range}`;
   const classes = cn(
-    "inline-flex h-7 max-w-full items-center gap-1.5 rounded-full border border-line bg-surface px-2.5 transition-colors duration-150",
-    (href || onClick) && "hover:border-line-strong hover:bg-sunken",
+    "inline-flex h-7 max-w-full items-center gap-1.5 px-1 transition-colors",
+    (href || onClick) && "hover:bg-pen-wash",
     className,
   );
   if (href) {
     return (
-      <a href={href} target="_blank" rel="noreferrer" className={classes} title={t.common.openOnGitHub}>
+      <a href={href} target="_blank" rel="noreferrer" className={classes} title={t.common.openOnGitHub} aria-label={label}>
         {body}
       </a>
     );
   }
   if (onClick) {
     return (
-      <button type="button" onClick={onClick} className={classes}>
+      <button type="button" onClick={onClick} className={classes} aria-label={label}>
         {body}
       </button>
     );

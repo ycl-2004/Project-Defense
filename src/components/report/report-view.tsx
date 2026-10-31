@@ -1,6 +1,6 @@
 "use client";
 
-import { CircleAlert, CircleCheck, Download, FileText, Printer, RotateCcw, ShieldCheck, Target } from "lucide-react";
+import { Download, FileText, Printer, RotateCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Accordion as AccordionPrimitive } from "radix-ui";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -9,7 +9,7 @@ import { EmptyState, PageSkeleton } from "@/components/shared/empty-state";
 import { GitHubIcon } from "@/components/shared/github-icon";
 import { RichText } from "@/components/shared/rich-text";
 import { SiteHeader } from "@/components/shared/site-header";
-import { Button } from "@/components/ui/button";
+import { PenMark } from "@/components/shared/marks";
 import { useHydrated, useSession, type ActiveSession, type SavedReport } from "@/lib/client/session-store";
 import { reportMarkdown } from "@/lib/interview/export";
 import { totalHints } from "@/lib/interview/machine";
@@ -31,7 +31,7 @@ export function ReportView() {
       {!hydrated ? (
         <PageSkeleton />
       ) : !session || !saved ? (
-        <EmptyState icon={<FileText className="size-5" />} title={t.report.noReport} body={t.report.noReportLead} action={t.report.start} href="/" />
+        <EmptyState icon={<FileText className="size-5" strokeWidth={1.5} />} title={t.report.noReport} body={t.report.noReportLead} action={t.report.start} href="/" />
       ) : (
         <ReportBody session={session} saved={saved} />
       )}
@@ -42,8 +42,8 @@ export function ReportView() {
 function Section({ title, children, aside }: { title: string; children: React.ReactNode; aside?: React.ReactNode }) {
   return (
     <section className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 className="font-display text-[22px] font-semibold text-ink">{title}</h2>
+      <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-rule-strong pb-2">
+        <h2 className="font-serif text-[22px] font-semibold text-ink">{title}</h2>
         {aside}
       </div>
       {children}
@@ -104,8 +104,7 @@ function ReportBody({ session, saved }: { session: ActiveSession; saved: SavedRe
   }
 
   return (
-    <main className="mx-auto flex max-w-5xl flex-col gap-12 px-5 pb-24 pt-6 sm:px-8 lg:pt-10">
-      {/* Title */}
+    <main className="mx-auto flex max-w-5xl flex-col gap-14 px-5 pb-24 pt-6 sm:px-8 lg:pt-10">
       <header className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div className="flex min-w-0 flex-col gap-3">
           <a
@@ -119,94 +118,68 @@ function ReportBody({ session, saved }: { session: ActiveSession; saved: SavedRe
               {repo.owner}/{repo.repo} · {repo.sha.slice(0, 7)}
             </span>
           </a>
-          <h1 className="font-display text-[34px] font-semibold leading-[1.15] text-ink sm:text-[42px]">{t.report.title}</h1>
+          <h1 className="font-serif text-[36px] font-semibold leading-[1.2] text-ink sm:text-[46px]">{t.report.title}</h1>
           <p className="text-[14.5px] text-ink-2">
             {f(t.report.meta, { part: part.title, difficulty: t.difficulty[difficulty].name, count: plan.length })}
-            <span className="text-ink-3"> · {f(t.report.generatedAt, { date })}</span>
+            <span> · {f(t.report.generatedAt, { date })}</span>
           </p>
         </div>
-        <div className="no-print flex flex-wrap gap-2">
-          <Button variant="outline" onClick={exportMarkdown} className="h-10 rounded-xl border-line-strong px-3.5">
-            <Download className="size-4" />
+        <div className="no-print flex flex-wrap items-center gap-x-5 gap-y-2">
+          <button
+            type="button"
+            onClick={exportMarkdown}
+            className="inline-flex h-10 items-center gap-2 border-b border-rule-strong text-[14px] text-ink-2 hover:border-ink hover:text-ink"
+          >
+            <Download className="size-4" strokeWidth={1.5} />
             {t.report.exportMd}
-          </Button>
-          <Button variant="outline" onClick={print} className="h-10 rounded-xl border-line-strong px-3.5">
-            <Printer className="size-4" />
+          </button>
+          <button
+            type="button"
+            onClick={print}
+            className="inline-flex h-10 items-center gap-2 border-b border-rule-strong text-[14px] text-ink-2 hover:border-ink hover:text-ink"
+          >
+            <Printer className="size-4" strokeWidth={1.5} />
             {t.report.print}
-          </Button>
-          <Button onClick={() => router.push("/setup")} className="h-10 rounded-xl px-4 hover:bg-brand-strong">
-            <RotateCcw className="size-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => router.push("/setup")}
+            className="inline-flex h-11 items-center gap-2 bg-ink px-5 text-[15px] font-medium text-paper transition-opacity hover:opacity-90"
+          >
+            <RotateCcw className="size-4" strokeWidth={1.5} />
             {t.report.again}
-          </Button>
+          </button>
         </div>
       </header>
 
-      {/* Summary + ratings */}
-      <section className="break-inside-avoid rounded-3xl border border-line bg-surface p-6 shadow-card sm:p-8">
-        <h2 className="text-[13px] font-semibold text-ink-3">{t.report.summary}</h2>
-        <p className="mt-3 text-[17px] leading-[1.85] text-ink sm:text-[18px]">
+      <section className="break-inside-avoid border-y border-rule-strong py-7">
+        <h2 className="text-[13px] font-medium text-ink-2">{t.report.summary}</h2>
+        <p className="mt-3 max-w-[40em] font-hand text-[18px] leading-[1.8] text-pen">
           <RichText text={report.summary} />
         </p>
-        <div className="mt-7 border-t border-line pt-6">
-          <h3 className="mb-4 text-[13px] font-semibold text-ink-3">{t.report.ratings}</h3>
+        <div className="mt-7 border-t border-rule pt-6">
+          <h3 className="mb-4 text-[13px] font-medium text-ink-2">{t.report.ratings}</h3>
           <RatingStrip ratings={ratings} />
         </div>
       </section>
 
-      {/* Five layers */}
       <Section title={t.report.layers}>
-        <div className="grid break-inside-avoid grid-cols-1 items-center gap-8 rounded-3xl border border-line bg-surface p-6 shadow-card sm:p-8 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] print:grid-cols-2">
+        <div className="grid break-inside-avoid grid-cols-1 items-center gap-8 md:grid-cols-2 print:grid-cols-2">
           <LayerRadar scores={scores} className="mx-auto max-w-[340px]" />
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-4">
             <LayerScoreList scores={scores} />
             <p className="text-[12.5px] leading-[1.7] text-ink-3">{t.report.layersNote}</p>
           </div>
         </div>
       </Section>
 
-      {/* Strengths and misconceptions */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <section className="break-inside-avoid rounded-3xl border border-line bg-surface p-6 shadow-card">
-          <h2 className="flex items-center gap-2 text-[16px] font-semibold text-ink">
-            <CircleCheck className="size-[18px] text-clear" strokeWidth={2.25} />
-            {t.report.strengths}
-          </h2>
-          <ul className="mt-4 flex flex-col gap-3">
-            {report.strengths.map((item) => (
-              <li key={item} className="flex gap-2.5 text-[14.5px] leading-[1.75] text-ink">
-                <span className="mt-[11px] size-1.5 shrink-0 rounded-full bg-clear-mark" />
-                <span>
-                  <RichText text={item} />
-                </span>
-              </li>
-            ))}
-          </ul>
-        </section>
-        <section className="break-inside-avoid rounded-3xl border border-line bg-surface p-6 shadow-card">
-          <h2 className="flex items-center gap-2 text-[16px] font-semibold text-ink">
-            <CircleAlert className="size-[18px] text-miss" strokeWidth={2.25} />
-            {t.report.misconceptions}
-          </h2>
-          {report.misconceptions.length ? (
-            <ul className="mt-4 flex flex-col gap-3">
-              {report.misconceptions.map((item) => (
-                <li key={item} className="flex gap-2.5 text-[14.5px] leading-[1.75] text-ink">
-                  <span className="mt-[11px] size-1.5 shrink-0 rounded-full bg-miss-mark" />
-                  <span>
-                    <RichText text={item} />
-                  </span>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="mt-4 text-[14.5px] text-ink-2">{t.report.noMisconceptions}</p>
-          )}
-        </section>
+      <div className="grid grid-cols-1 gap-x-10 gap-y-10 md:grid-cols-2">
+        <ObservationColumn rating="clear" title={t.report.strengths} items={report.strengths} />
+        <ObservationColumn rating="misconception" title={t.report.misconceptions} items={report.misconceptions} empty={t.report.noMisconceptions} />
       </div>
 
-      {/* Question by question */}
       <Section title={t.report.questions}>
-        <AccordionPrimitive.Root type="multiple" value={open} onValueChange={setOpen} className="flex flex-col gap-3">
+        <AccordionPrimitive.Root type="multiple" value={open} onValueChange={setOpen} className="flex flex-col border-t border-rule">
           {plan.map((question, index) => {
             const rated = ratedById.get(question.id);
             return rated ? (
@@ -223,27 +196,26 @@ function ReportBody({ session, saved }: { session: ActiveSession; saved: SavedRe
         </AccordionPrimitive.Root>
       </Section>
 
-      {/* Learn next */}
       <Section title={t.report.studyNext}>
-        <ol className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        <ol className="flex flex-col border-t border-rule">
           {report.studyNext.map((item, index) => (
-            <li key={item.topic} className="flex break-inside-avoid gap-4 rounded-2xl border border-line bg-surface p-5">
-              <span className="tabular font-display text-[22px] font-semibold leading-none text-brand">{index + 1}</span>
-              <div className="flex min-w-0 flex-col gap-2">
-                <h3 className="text-[15.5px] font-semibold text-ink">
+            <li key={item.topic} className="flex break-inside-avoid gap-4 border-b border-rule py-4">
+              <span className="tabular w-7 shrink-0 font-serif text-[22px] font-semibold leading-[1.3] text-ink-3">{index + 1}</span>
+              <div className="flex min-w-0 flex-col gap-1.5">
+                <h3 className="font-serif text-[17px] font-semibold leading-[1.6] text-ink">
                   <RichText text={item.topic} />
                 </h3>
                 <p className="text-[14px] leading-[1.75] text-ink-2">
                   <RichText text={item.why} />
                 </p>
                 {item.files.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5">
+                  <p className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-[12px] text-ink-2">
                     {item.files.map((file) => (
-                      <span key={file} className="max-w-full truncate rounded-md bg-sunken px-1.5 py-0.5 font-mono text-[11.5px] text-ink-2">
+                      <span key={file} className="max-w-full truncate">
                         {file}
                       </span>
                     ))}
-                  </div>
+                  </p>
                 )}
               </div>
             </li>
@@ -251,28 +223,46 @@ function ReportBody({ session, saved }: { session: ActiveSession; saved: SavedRe
         </ol>
       </Section>
 
-      {/* Mentor */}
-      <section className="break-inside-avoid rounded-3xl bg-brand-soft p-6 sm:p-8">
-        <h2 className="flex items-center gap-2 text-[17px] font-semibold text-brand-ink">
-          <Target className="size-[18px]" />
-          {t.report.mentor}
-        </h2>
-        <p className="mt-1 text-[14px] text-ink-2">{t.report.mentorLead}</p>
-        <p className="mt-4 font-display text-[19px] font-semibold leading-[1.6] text-ink">
+      <section className="relative break-inside-avoid border border-pen p-6 sm:p-8">
+        <h2 className="absolute -top-3 left-5 bg-paper px-2 text-[14px] font-medium text-pen">{t.report.mentor}</h2>
+        <p className="text-[14px] text-ink-2">{t.report.mentorLead}</p>
+        <p className="mt-4 font-serif text-[21px] font-semibold leading-[1.65] text-ink">
           <RichText text={report.mentorNextStep.task} />
         </p>
-        <p className="mt-2 text-[14.5px] leading-[1.75] text-ink-2">
+        <p className="mt-3 text-[14.5px] leading-[1.75] text-ink-2">
           <RichText text={report.mentorNextStep.why} />
         </p>
       </section>
 
-      <footer className="flex flex-col gap-3 border-t border-line pt-6 text-[13.5px] leading-[1.75] text-ink-2">
+      <footer className="flex flex-col gap-3 border-t border-rule pt-6 text-[13px] leading-[1.75] text-ink-3">
         <span className="tabular">{f(t.report.hintsTotal, { count: totalHints(threads) })}</span>
         <p className="flex gap-2.5">
-          <ShieldCheck className="mt-0.5 size-4 shrink-0 text-clear" />
+          <PenMark rating="clear" className="mt-1 size-3.5" />
           {t.report.disclaimer}
         </p>
       </footer>
     </main>
+  );
+}
+
+function ObservationColumn({ rating, title, items, empty }: { rating: "clear" | "misconception"; title: string; items: string[]; empty?: string }) {
+  return (
+    <section className="break-inside-avoid">
+      <h2 className="flex items-center gap-2 border-b border-rule-strong pb-2 font-serif text-[19px] font-semibold text-ink">
+        <PenMark rating={rating} className="size-5" />
+        {title}
+      </h2>
+      {items.length ? (
+        <ul className="flex flex-col">
+          {items.map((item) => (
+            <li key={item} className="border-b border-rule py-3 text-[14.5px] leading-[1.75] text-ink">
+              <RichText text={item} />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="py-3 text-[14.5px] text-ink-2">{empty}</p>
+      )}
+    </section>
   );
 }

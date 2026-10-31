@@ -77,6 +77,8 @@ export const plannedQuestionSchema = z.object({
   /** What understanding the question probes; shown in the report, not during the interview. */
   focus: z.string(),
   snippet: snippetSchema,
+  /** The mentor's short margin note, pinned to one line inside the snippet. */
+  note: z.object({ line: z.number().int().positive(), text: z.string().max(60) }).optional(),
 });
 export type PlannedQuestion = z.infer<typeof plannedQuestionSchema>;
 
